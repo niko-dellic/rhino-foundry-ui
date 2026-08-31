@@ -20,6 +20,12 @@ public sealed class PublicApiTests
             typeof(FoundryColorField),
             typeof(FoundrySlider),
             typeof(FoundryDialogActions),
+            typeof(FoundryViewIcons),
+            typeof(FoundryToolbarSeparator),
+            typeof(FoundrySearchField),
+            typeof(FoundryViewModeSelector),
+            typeof(FoundryViewMode),
+            typeof(FoundryViewModeChangedEventArgs),
         ];
 
         Assert.All(publicTypes, type => Assert.True(type.IsPublic, $"{type.FullName} must remain public."));
