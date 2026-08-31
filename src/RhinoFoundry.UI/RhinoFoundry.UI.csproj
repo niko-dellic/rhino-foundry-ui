@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>RhinoFoundry.UI</RootNamespace>
+    <AssemblyName>RhinoFoundry.UI</AssemblyName>
+    <Version>0.1.0-preview.1</Version>
+    <PackageId>RhinoFoundry.UI</PackageId>
+    <Title>Rhino Foundry UI</Title>
+    <Authors>niko-dellic</Authors>
+    <Company>Foundry contributors</Company>
+    <Description>Accessible, Rhino-theme-aware Eto.Forms controls for Rhino 8 plug-ins.</Description>
+    <PackageTags>rhino;rhino3d;eto.forms;ui;plugin</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/niko-dellic/rhino-foundry-ui</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RhinoCommon" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>
