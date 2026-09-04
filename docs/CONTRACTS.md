@@ -1,0 +1,25 @@
+# Component contracts
+
+## Threading and lifetime
+
+Construct, update and dispose controls on Rhino's Eto UI thread. The parent owns child controls. Dispose a removed top-level surface explicitly. `FoundryCanvas` owns frame/settle timers and its native subscription; unload stops input and removes monitors, reload attaches once, and dispose releases timers. `FoundryScrollable` checks disposal before running deferred width work. Native clipboard subscriptions are disposable and must be detached when their scope unloads.
+
+Gallery item images are **borrowed**: the caller disposes them after replacing/removing all references. A gallery never deletes or generates Rhino previews. Icon drawing functions return caller-owned images. Native colors, pickers, file dialogs and application menus remain native.
+
+## Coordinates and input
+
+Camera world units are caller-defined; screen dimensions are Eto logical pixels, not Retina device pixels. Camera zoom preserves the world point beneath the screen anchor. Positive pan deltas translate content on screen. Mac precise scroll uses AppKit's system-mapped deltas with the established Foundry sign convention; pinch uses exponential magnification. Ordinary wheel input remains zoom. A canvas overlay predicate must cover occupied interactive rows, not an entire empty sidebar column.
+
+Canvas input is coalesced at 60Hz and settled after 80ms. Pending input is discarded on unload, explicit cancellation or disposal. The base's camera is authoritative unless a subclass overrides `ApplyCameraInput`; that subclass owns synchronization of its camera state and zoom limits. `OnCameraFrame` is the rendering invalidation hook, `OnCameraSettled` is the downstream notification hook. Keep Rhino document work out of these handlers.
+
+Generic selection keys are stable value types. Selection does not own documents, infer parent/child semantics, navigate, or mutate anything. A consumer supplies visible order and handles domain filtering.
+
+## Keyboard and failure behavior
+
+Buttons activate on Enter/Space; checkbox on Space; slider arrows/Home/End; gallery arrows/Home/End. Disabled controls ignore interaction. Native text editors keep their own shortcuts. The Mac clipboard adapter requires focused descendants, rejects text editors, and consults the consumer's edit-state predicate before invoking callbacks.
+
+The library does not silently recover failed host mutations or swallow application exceptions. Consumer operations own cancellation, Undo, errors and recovery. Platform initialization is explicit; Windows does not require the Mac assembly. Both themes and native high-DPI behavior require host validation, beyond pure unit tests.
+
+## Compatibility
+
+The existing five-argument `FoundryFormField` constructor remains available; fixed-height fields use an additional overload. Existing 0.2 icon presets retain their drawings. Layout keeps public/persisted geometry and selection adapters while canonical algorithms live in Primitives. Prerelease API evolution is permitted, but persistence migrations are a consumer responsibility. Never introduce a schema reset as part of a UI extraction.

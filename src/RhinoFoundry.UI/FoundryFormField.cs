@@ -18,8 +18,13 @@ public sealed class FoundryFormField : PixelLayout
     private readonly int _verticalInset;
     private readonly bool _centerSingleLineEditor;
 
+    public FoundryFormField(Control input, Control? interactionControl = null,
+        int minimumHeight = SingleLineHeight, int? horizontalInset = null, float cornerRadius = 6)
+        : this(input, null, interactionControl, minimumHeight, horizontalInset, cornerRadius) { }
+
     public FoundryFormField(
         Control input,
+        int? fixedHeight,
         Control? interactionControl = null,
         int minimumHeight = SingleLineHeight,
         int? horizontalInset = null,
@@ -36,7 +41,7 @@ public sealed class FoundryFormField : PixelLayout
         PrepareNativeInput(input);
         input.Load += (_, _) => SuppressNativeFocusRing(input);
         var requestedHeight = input.Height > 0 ? input.Height + (_verticalInset * 2) : SingleLineHeight;
-        Height = Math.Max(minimumHeight, requestedHeight);
+        Height = fixedHeight ?? Math.Max(minimumHeight, requestedHeight);
         if (input.Width > 0) Width = input.Width;
         Add(_chrome, 0, 0);
         Add(_input, _horizontalInset, _verticalInset);

@@ -1,0 +1,24 @@
+name: Portable UI
+on: [push, pull_request]
+jobs:
+  portable:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+          dotnet-version: |
+            10.0.103
+            8.0.x
+      - run: dotnet restore tests/RhinoFoundry.UI.Tests --locked-mode
+      - run: dotnet restore tests/RhinoFoundry.UI.Primitives.Tests --locked-mode
+      - run: dotnet test tests/RhinoFoundry.UI.Tests --no-restore -c Release
+      - run: dotnet test tests/RhinoFoundry.UI.Primitives.Tests --no-restore -c Release
+      - run: dotnet pack src/RhinoFoundry.UI/RhinoFoundry.UI.csproj --no-restore -c Release -o artifacts/packages
+      - run: dotnet pack src/RhinoFoundry.UI.Primitives/RhinoFoundry.UI.Primitives.csproj --no-restore -c Release -o artifacts/packages
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portable-packages
+          path: artifacts/packages/*.nupkg

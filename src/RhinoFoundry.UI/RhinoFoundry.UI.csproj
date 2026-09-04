@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>RhinoFoundry.UI</RootNamespace>
     <AssemblyName>RhinoFoundry.UI</AssemblyName>
-    <Version>0.2.0-preview.1</Version>
+    <Version>0.3.0-preview.1</Version>
     <PackageId>RhinoFoundry.UI</PackageId>
     <Title>Rhino Foundry UI</Title>
     <Authors>niko-dellic</Authors>
@@ -23,4 +23,5 @@
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
+  <ItemGroup><ProjectReference Include="../RhinoFoundry.UI.Primitives/RhinoFoundry.UI.Primitives.csproj" /></ItemGroup>
 </Project>

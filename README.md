@@ -1,60 +1,48 @@
 # Rhino Foundry UI
 
-`RhinoFoundry.UI` is a small, accessible set of Eto.Forms controls for Rhino 8 plug-ins. It follows Rhino dark and light themes while providing consistent fields, buttons, toolbar groups, view switching, search fields, vector icons, checkboxes, sliders, and color triggers.
+Shared Eto.Forms components for Foundry plugins running on Rhino 8 / .NET 8 on Windows and macOS. Version **0.3.0-preview.1** is a coordinated prerelease migration; native Windows sign-off is required before a stable release.
 
-The package is intentionally presentation-only. It does not own document mutation, persistence, commands, panel registration, or product-specific domain behavior.
+## Packages and installation
 
-## Status
+| Package | Responsibility | Host dependency |
+| --- | --- | --- |
+| RhinoFoundry.UI.Primitives | Camera, geometry, thumbnail layout and generic selection | None |
+| RhinoFoundry.UI | Theme, controls, accordion, resizable panes, gallery, tables, scroll container and canvas | Rhino-provided Eto / RhinoCommon |
+| RhinoFoundry.UI.MacOS | AppKit trackpad, scoped clipboard and native table adapters | Installed Rhino Mac assemblies |
 
-The `0.2.0-preview.1` API expands the initial control extraction with the product-neutral workspace pieces used by table, thumbnail, and canvas plug-in views. Preview releases may refine public names and constructor signatures before `1.0.0`.
+Pin all packages to the same exact version. Consumers vendor the prerelease `.nupkg` files in `packages/`, use that local NuGet source and commit `packages.lock.json`. Bundle the UI and Primitives DLLs beside every consumer RHP; include MacOS only in Mac bundles. This library is not installed as a separate Rhino plugin. Update all co-installed consumers together: Rhino can share assembly loads between plugins, so different DLLs with the same assembly version are unsafe.
 
-## Install
+Initialize `RhinoFoundry.UI.MacOS.FoundryMacOS.Initialize()` from each Mac consumer's composition boundary before controls load. Windows uses Eto input and native Windows controls; it must not reference or ship the Mac adapter. Never compile the Mac project using fallback stubs.
 
-```xml
-    <PackageReference Include="RhinoFoundry.UI" Version="0.2.0-preview.1" />
+## Components
+
+- `FoundryTheme`: semantic colors, typography, spacing and hierarchy surfaces.
+- `FoundryDialogButton`, `FoundryToolbarIconButton`, `FoundryToolbarButtonGroup`: quiet 32px actions and mode controls.
+- `FoundryFormField`, `FoundryToolbarField`, `FoundryCheckBox`, `FoundryColorField`, `FoundrySlider`: fields with keyboard, disabled and focus behavior.
+- `FoundryAccordion`, `FoundryPaneResizeHandle`, `FoundryTextSegmentedControl`, `FoundryMultiSelectField`, `FilteredPicker`, badges: reusable compositions.
+- `FoundryTable`: native row presentation and formatting; the consumer supplies data, columns, selection and editing commands.
+- `FoundryThumbnailGallery`: responsive image cards, selection and optional drag data. Set `EmptyText` and `DragDataFormat` in the consumer.
+- `FoundryScrollable`: guards and coalesces viewport-width synchronization. This avoids AppKit layout feedback while scrolling an accordion.
+- `FoundryCanvas`: a drawing surface with camera math, batched gestures and disposable native subscriptions. Override occupied overlay hit testing and camera application when a product has its own zoom policy.
+- `FoundrySurfaceButton`, `FoundryInsetFormField`, `FoundrySurfaceTheme`: explicit 34px variants preserving Maps' existing presentation. They are not replacements for the standard 32px family.
+
+Product branding, white paper surfaces, Rhino document mutation, persistence, preview generation, domain drag formats, hierarchy rules, card rendering and application workflows remain in consumers. A product-specific rendering class is expected; it should compose these foundations rather than duplicate widget behavior.
+
+See [contracts](docs/CONTRACTS.md), [validation](docs/VALIDATION.md) and [migration notes](CHANGELOG.md).
+
+## Build and test
+
+Use the SDK policy in `global.json` and a .NET 8 runtime. Portable checks:
+
+```sh
+dotnet restore src/RhinoFoundry.UI/RhinoFoundry.UI.csproj --locked-mode
+dotnet build src/RhinoFoundry.UI/RhinoFoundry.UI.csproj --no-restore -c Release
+dotnet test tests/RhinoFoundry.UI.Tests -c Release
+dotnet test tests/RhinoFoundry.UI.Primitives.Tests -c Release
 ```
 
-Rhino plug-in projects should continue to reference the RhinoCommon version they target. Do not ship RhinoCommon or Eto runtime assemblies inside the plug-in bundle; Rhino provides them.
+On a provisioned Mac, restore/build the solution and pack all three `src` projects. `RhinoMacResources` can point to the installed Rhino resources directory. Build to an isolated `BaseOutputPath` while Rhino is running. Do not use an ordinary hosted macOS CI runner as proof of native Rhino compatibility.
 
-## Example
+`tools/RhinoFoundry.UI.HostChecks` builds a document-free contract runner and visual gallery. Run its `ComponentChecks.Run()` and `ShowGallery()` inside Rhino's UI thread using the example in `samples/run-host-checks.py`. The ordinary xUnit tests do not initialize Eto or certify native behavior.
 
-```csharp
-using Eto.Drawing;
-using Eto.Forms;
-using RhinoFoundry.UI;
-
-var nameInput = new TextBox { PlaceholderText = "Definition name" };
-var nameField = new FoundryFormField(nameInput);
-
-var apply = new FoundryDialogButton(
-    "Apply",
-    FoundryDialogButtonStyle.Primary);
-
-var color = new FoundryColorField(
-    Colors.CornflowerBlue,
-    toolTip: "Choose a preview color");
-
-var search = new FoundrySearchField("Search definitions");
-var views = new FoundryViewModeSelector(FoundryViewMode.Table);
-views.SelectedModeChanged += (_, args) => ShowView(args.Mode);
-```
-
-## Design and accessibility contract
-
-- Single-line controls and toolbar actions are 32 px high.
-- Controls expose normal Eto focus behavior with a neutral visible focus ring.
-- Enter and Space activate buttons and color triggers.
-- Space toggles checkboxes.
-- Arrow keys operate sliders; Home and End reach their bounds.
-- Icon-only controls require useful tooltips supplied by the consumer.
-- `FoundryViewModeSelector` provides arrow-key traversal between table, thumbnail, and canvas modes.
-- Native file pickers, color dialogs, context menus, and message boxes remain native.
-- Consumers should verify dark/light themes and Retina/high-DPI scale in the Rhino versions they support.
-
-## Contributing
-
-Keep additions product-neutral and reusable by more than one Rhino plug-in. New controls must include rest, hover, pressed, focus, disabled, and keyboard states. Product-specific panels, icons, and document behavior belong in the consuming plug-in.
-
-## License
-
-MIT
+Packages remain local until explicit publication. Use `scripts/validate-packages.py` to verify payloads and generate a bundle hash manifest before syncing consumers. Rebuilds during development are staging candidates; once a version is distributed, publish changes under a new version.

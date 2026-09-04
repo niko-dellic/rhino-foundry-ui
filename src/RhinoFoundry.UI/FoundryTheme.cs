@@ -6,6 +6,9 @@ namespace RhinoFoundry.UI;
 
 public static class FoundryTheme
 {
+    private const float HierarchyTableFontSize = 11;
+    public const int TableRowHeight = 24;
+
     public const int Space1 = 4;
     public const int Space2 = 8;
     public const int Space3 = 12;
@@ -80,9 +83,37 @@ public static class FoundryTheme
         ? Color.FromArgb(34, 34, 37, 255)
         : Color.FromArgb(250, 250, 250, 255);
 
+    public static Color HierarchyAlternateRowBackground => IsDarkMode
+        ? Color.FromArgb(34, 34, 37, 255)
+        : Color.FromArgb(250, 250, 250, 255);
+
     public static Color HierarchyDocumentBackground => IsDarkMode
         ? Color.FromArgb(39, 39, 42, 255)
         : Color.FromArgb(244, 244, 245, 255);
+
+    // Keep hierarchy reorganization feedback consistent with the native table
+    // drag treatment instead of borrowing the blue canvas-selection accent.
+    public static Color HierarchyDropBackground => SystemColors.Selection;
+
+    public static Color HierarchyDropForeground => SystemColors.SelectionText;
+
+    public static Color HierarchyDropStroke => IsDarkMode
+        ? Color.FromArgb(212, 212, 216, 255)
+        : Color.FromArgb(82, 82, 91, 255);
+
+    public static Color HierarchyInlineEditorRowBackground => SystemColors.Selection;
+
+    public static Color HierarchyInlineEditorRowForeground => SystemColors.SelectionText;
+
+    public static Color HierarchyInlineEditorBackground => InputBackground;
+
+    public static Color HierarchyInlineEditorForeground => PrimaryText;
+
+    public static Color HierarchyInlineEditorSelectionBackground => SystemColors.Selection;
+
+    public static Color HierarchyInlineEditorSelectionForeground => SystemColors.SelectionText;
+
+    public static Color HierarchyInlineEditorStroke => WithAlpha(PrimaryText, 185);
 
     public const double DefaultCanvasGridOpacity = 0.80;
 
@@ -106,6 +137,10 @@ public static class FoundryTheme
         ? Color.FromArgb(251, 191, 36, 255)
         : Color.FromArgb(180, 83, 9, 255);
 
+    public static Color WarningSurface => IsDarkMode
+        ? Color.FromArgb(63, 42, 18, 255)
+        : Color.FromArgb(255, 247, 237, 255);
+
     public static Color SelectionWindowStroke(bool crossing) => RhinoColor(
         () => crossing
             ? AppearanceSettings.SelectionWindowCrossingStrokeColor
@@ -124,6 +159,10 @@ public static class FoundryTheme
     public static Font BrandFont => SystemFonts.Bold(9);
 
     public static Font EmptyTitleFont => SystemFonts.Bold(13);
+
+    public static Font HierarchyTableFont => SystemFonts.Default(HierarchyTableFontSize);
+
+    public static Font HierarchyTableBadgeFont => SystemFonts.Bold(HierarchyTableFontSize);
 
     public static Label MutedLabel(string text = "")
     {
@@ -144,6 +183,12 @@ public static class FoundryTheme
             Content = content,
         };
     }
+
+    public static Control VerticalRule() => new Panel
+    {
+        BackgroundColor = CanvasBorder,
+        Size = new Size(1, 20),
+    };
 
     private static Color RhinoColor(Func<System.Drawing.Color> getColor, Color fallback)
     {
