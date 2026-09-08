@@ -10,6 +10,7 @@ public sealed class FilteredPicker : Panel
     private readonly TextBox _textBox;
     private readonly FoundryToolbarIconButton _toggleButton;
     private readonly ListBox _results;
+    private readonly Control? _popupFooter;
     private readonly int _popupHeight;
     private int _visibleResultCount;
     private Form? _resultsPopup;
@@ -19,11 +20,13 @@ public sealed class FilteredPicker : Panel
         IEnumerable<string> labels,
         string placeholder,
         int popupHeight = DefaultPopupHeight,
-        int controlHeight = 32)
+        int controlHeight = 32,
+        Control? popupFooter = null)
     {
         controlHeight = Math.Max(24, controlHeight);
         MinimumSize = new Size(0, controlHeight);
         _popupHeight = Math.Max(86, popupHeight);
+        _popupFooter = popupFooter;
         _allLabels = labels.Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(label => label, StringComparer.OrdinalIgnoreCase)
             .ToArray();
@@ -196,7 +199,7 @@ public sealed class FilteredPicker : Panel
             AutoSize = false,
             BackgroundColor = FoundryTheme.CanvasBorder,
             Padding = new Padding(1),
-            Content = _results,
+            Content = CreatePopupContent(),
         };
         popup.KeyDown += (_, eventArgs) =>
         {
@@ -231,7 +234,9 @@ public sealed class FilteredPicker : Panel
                      Screen.PrimaryScreen;
         var work = screen.WorkingArea;
         var width = Math.Max(240, Width);
-        var height = Math.Min(_popupHeight, Math.Max(86, _visibleResultCount * 28 + 2));
+        var footerHeight = PopupFooterHeight();
+        var height = Math.Min(_popupHeight, Math.Max(86, _visibleResultCount * 28 + 2 + footerHeight));
+        _results.Height = Math.Max(56, height - footerHeight - 2);
         var left = (int)Math.Ceiling(work.Left);
         var top = (int)Math.Ceiling(work.Top);
         var right = (int)Math.Floor(work.Right);
@@ -245,6 +250,41 @@ public sealed class FilteredPicker : Panel
         y = Math.Clamp(y, top + FoundryTheme.Space2, bottom - height - FoundryTheme.Space2);
         _resultsPopup.Size = new Size(width, height);
         _resultsPopup.Location = new Point(x, y);
+    }
+
+    private Control CreatePopupContent()
+    {
+        if (_popupFooter is null)
+            return _results;
+
+        return new StackLayout
+        {
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Spacing = 0,
+            Items =
+            {
+                new StackLayoutItem(_results, expand: true),
+                new Panel
+                {
+                    Height = 1,
+                    BackgroundColor = FoundryTheme.CanvasBorder,
+                },
+                new Panel
+                {
+                    Padding = new Padding(FoundryTheme.Space2),
+                    BackgroundColor = FoundryTheme.ContentBackground,
+                    Content = _popupFooter,
+                },
+            },
+        };
+    }
+
+    private int PopupFooterHeight()
+    {
+        if (_popupFooter is null)
+            return 0;
+        return Math.Max(32, _popupFooter.Height) +
+               FoundryTheme.Space2 * 2 + 1;
     }
 
     private void ClosePopup()

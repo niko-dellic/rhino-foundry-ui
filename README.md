@@ -1,6 +1,10 @@
 # Rhino Foundry UI
 
-Shared Eto.Forms components for Foundry plugins running on Rhino 8 / .NET 8 on Windows and macOS. Version **0.3.0-preview.1** is a coordinated prerelease migration; native Windows sign-off is required before a stable release.
+The Drawing Set workspace adds `FoundryActivityTimeline`, `FoundryActivityCard`, and
+`FoundryResourceChip` plus `FoundryApprovalCard` in coordinated prerelease **0.3.0-preview.7**. These controls
+are product-neutral: consumers own execution, approvals, document navigation and image lifetimes.
+
+Shared Eto.Forms components for Foundry plugins running on Rhino 8 / .NET 8 on Windows and macOS. Version **0.3.0-preview.4** is a coordinated prerelease migration; native Windows sign-off is required before a stable release.
 
 ## Packages and installation
 
@@ -28,7 +32,7 @@ Initialize `RhinoFoundry.UI.MacOS.FoundryMacOS.Initialize()` from each Mac consu
 
 Product branding, white paper surfaces, Rhino document mutation, persistence, preview generation, domain drag formats, hierarchy rules, card rendering and application workflows remain in consumers. A product-specific rendering class is expected; it should compose these foundations rather than duplicate widget behavior.
 
-See [contracts](docs/CONTRACTS.md), [validation](docs/VALIDATION.md) and [migration notes](CHANGELOG.md).
+Start with the [consumer guide](docs/USAGE.md) for package setup and copyable component examples. Use [implementing shared components](docs/IMPLEMENTING_COMPONENTS.md) when contributing or extracting a control. See [contracts](docs/CONTRACTS.md), [validation](docs/VALIDATION.md), [0.3 migration notes](docs/MIGRATION_0.3.md), and the [changelog](CHANGELOG.md) for release details.
 
 ## Build and test
 

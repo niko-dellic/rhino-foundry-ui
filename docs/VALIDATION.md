@@ -1,5 +1,16 @@
 # Release and parity checklist
 
+## Drawing Set workspace pass — 2026-09-08
+
+Activity cards, expandable image previews and resource references were exercised
+in Rhino 8.34 on macOS, dark theme/Retina. Real form submission reached a staged
+plan, an edited proposal applied after one approval, and an inline sheet capture
+and resource reference appeared. The sheet reference opened the actual layout.
+Native review found a missing stretch alignment in the consumer's review layout;
+the coordinated preview.7 approval surface fixes that composition.
+Light theme, native Windows, reduced-motion behavior, very long histories and
+full keyboard traversal are not signed off by this pass.
+
 A successful build is not native sign-off. Record the exact package/binary hashes, Rhino build, OS, theme and scale with each result.
 
 ## Automated

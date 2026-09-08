@@ -1,5 +1,14 @@
 # Component contracts
 
+## Activity and review surfaces
+
+ActivityTimeline owns its child rows; image data remains caller-owned until the
+rows are removed/disposed. Expandable previews borrow the same image for their
+modal lifetime. ResourceChip delegates activation through the standard button,
+preserving its pointer, Enter/Space, focus and disabled behavior. ApprovalCard owns
+its supplied child control but never creates an authorization or applies changes.
+Hosts own retention limits, progress identities and workflow cancellation.
+
 ## Threading and lifetime
 
 Construct, update and dispose controls on Rhino's Eto UI thread. The parent owns child controls. Dispose a removed top-level surface explicitly. `FoundryCanvas` owns frame/settle timers and its native subscription; unload stops input and removes monitors, reload attaches once, and dispose releases timers. `FoundryScrollable` checks disposal before running deferred width work. Native clipboard subscriptions are disposable and must be detached when their scope unloads.

@@ -19,7 +19,7 @@
         "type": "Project",
         "dependencies": {
           "RhinoCommon": "[8.34.26223.11001, )",
-          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.1, )"
+          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.4, )"
         }
       },
       "rhinofoundry.ui.primitives": {

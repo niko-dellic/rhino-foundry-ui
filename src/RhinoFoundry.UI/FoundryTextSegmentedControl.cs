@@ -6,12 +6,12 @@ namespace RhinoFoundry.UI;
 /// <summary>Compact text segments for mutually exclusive Foundry modes.</summary>
 public sealed class FoundryTextSegmentedControl : Drawable
 {
-    private const int PaddingSize = 3;
-    private const int SegmentHeight = 26;
     private readonly string[] _labels;
     private readonly int _segmentWidth;
     private readonly string? _leadingLabel;
     private readonly int _leadingLabelWidth;
+    private readonly int _paddingSize;
+    private readonly int _segmentHeight;
     private readonly Font _font = SystemFonts.Bold(9);
     private int _selectedIndex;
     private int _hoveredIndex = -1;
@@ -23,19 +23,23 @@ public sealed class FoundryTextSegmentedControl : Drawable
         int selectedIndex = 0,
         int segmentWidth = 72,
         string? leadingLabel = null,
-        int leadingLabelWidth = 0)
+        int leadingLabelWidth = 0,
+        int controlHeight = 32)
         : base(true)
     {
         ArgumentNullException.ThrowIfNull(labels);
         if (labels.Count == 0) throw new ArgumentException("At least one segment is required.", nameof(labels));
+        controlHeight = Math.Max(24, controlHeight);
+        _paddingSize = controlHeight < 32 ? 2 : 3;
+        _segmentHeight = controlHeight - _paddingSize * 2;
         _labels = labels.ToArray();
-        _segmentWidth = Math.Max(52, segmentWidth);
+        _segmentWidth = Math.Max(controlHeight < 32 ? 40 : 52, segmentWidth);
         _leadingLabel = string.IsNullOrWhiteSpace(leadingLabel) ? null : leadingLabel.Trim();
         _leadingLabelWidth = _leadingLabel is null ? 0 : Math.Max(52, leadingLabelWidth);
         _selectedIndex = Math.Clamp(selectedIndex, 0, _labels.Length - 1);
         Size = new Size(
-            PaddingSize * 2 + _leadingLabelWidth + _segmentWidth * _labels.Length,
-            SegmentHeight + PaddingSize * 2);
+            _paddingSize * 2 + _leadingLabelWidth + _segmentWidth * _labels.Length,
+            controlHeight);
         MinimumSize = Size;
         BackgroundColor = Colors.Transparent;
         CanFocus = true;
@@ -108,8 +112,8 @@ public sealed class FoundryTextSegmentedControl : Drawable
 
     private int HitTest(PointF point)
     {
-        if (point.Y < PaddingSize || point.Y > PaddingSize + SegmentHeight) return -1;
-        var segmentStart = PaddingSize + _leadingLabelWidth;
+        if (point.Y < _paddingSize || point.Y > _paddingSize + _segmentHeight) return -1;
+        var segmentStart = _paddingSize + _leadingLabelWidth;
         var index = (int)((point.X - segmentStart) / _segmentWidth);
         return point.X >= segmentStart && index >= 0 && index < _labels.Length ? index : -1;
     }
@@ -123,7 +127,7 @@ public sealed class FoundryTextSegmentedControl : Drawable
         graphics.DrawPath(new Pen(FoundryTheme.WithAlpha(FoundryTheme.CanvasBorder, 75), 1), capsule);
         if (_leadingLabel is not null)
         {
-            var labelBounds = new RectangleF(PaddingSize, PaddingSize, _leadingLabelWidth, SegmentHeight);
+            var labelBounds = new RectangleF(_paddingSize, _paddingSize, _leadingLabelWidth, _segmentHeight);
             var labelSize = graphics.MeasureString(_font, _leadingLabel);
             graphics.DrawText(
                 _font,
@@ -134,9 +138,9 @@ public sealed class FoundryTextSegmentedControl : Drawable
         }
         for (var index = 0; index < _labels.Length; index++)
         {
-            var bounds = new RectangleF(PaddingSize + _leadingLabelWidth + index * _segmentWidth + 0.5f,
-                PaddingSize + 0.5f,
-                _segmentWidth - 1, SegmentHeight - 1);
+            var bounds = new RectangleF(_paddingSize + _leadingLabelWidth + index * _segmentWidth + 0.5f,
+                _paddingSize + 0.5f,
+                _segmentWidth - 1, _segmentHeight - 1);
             using var segment = GraphicsPath.GetRoundRect(bounds, 6);
             if (index == _selectedIndex)
             {
@@ -157,8 +161,8 @@ public sealed class FoundryTextSegmentedControl : Drawable
         }
         if (Enabled && HasFocus && _showFocusRing)
         {
-            var bounds = new RectangleF(PaddingSize + _leadingLabelWidth + _selectedIndex * _segmentWidth + 2.5f,
-                PaddingSize + 2.5f, _segmentWidth - 5, SegmentHeight - 5);
+            var bounds = new RectangleF(_paddingSize + _leadingLabelWidth + _selectedIndex * _segmentWidth + 2.5f,
+                _paddingSize + 2.5f, _segmentWidth - 5, _segmentHeight - 5);
             using var focus = GraphicsPath.GetRoundRect(bounds, 4);
             graphics.DrawPath(new Pen(FoundryTheme.WithAlpha(FoundryTheme.PrimaryText, 150), 1), focus);
         }
