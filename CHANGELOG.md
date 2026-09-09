@@ -81,3 +81,14 @@
 - Add explicit Maps 34px variants without restyling existing screens.
 - Add a native host contract runner/gallery, package hashes and Windows portable CI.
 - Stable release remains gated on both licensed Rhino hosts; no claim of completed Windows native verification.
+# 0.3.0-preview.22
+
+- Add composer-based question sequence and bounded growing text fields.
+- Align quiet disclosure titles with their content.
+- Forward read-only Markdown wheel input to the containing conversation.
+# 0.3.0-preview.24
+
+- Defer question page replacement and final submission beyond native input callbacks.
+- Bind editor changes to their page instead of the currently displayed question.
+- Left-align questions/options, right-align navigation and add custom-answer placeholder.
+- Correct counter baseline following native mouse-through verification of preview.23.

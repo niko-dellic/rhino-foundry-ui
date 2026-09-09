@@ -96,6 +96,8 @@ public sealed class FoundryDialogButton : Drawable
     }
 
     public event EventHandler? Click;
+    /// <summary>Use a leading inset for full-width answer/action rows; default remains centered.</summary>
+    public bool LeftAlignText { get; init; }
 
     public void PerformClick()
     {
@@ -142,7 +144,7 @@ public sealed class FoundryDialogButton : Drawable
         graphics.DrawText(
             _font,
             textColor,
-            (Width - textSize.Width) / 2f,
+            LeftAlignText ? FoundryTheme.Space3 : (Width - textSize.Width) / 2f,
             (Height - textSize.Height) / 2f,
             _text);
 

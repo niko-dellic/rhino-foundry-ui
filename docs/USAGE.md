@@ -540,3 +540,25 @@ after width changes. Links display their labels without navigation; raw HTML is
 literal text and images display alt text without fetching. Captured images belong
 in the thumbnail gallery. Deploy the transitive Markdig dependency. Theme colors
 are captured at construction. No embedded browser instances are retained.
+# Composer questions and growing text (preview.22)
+
+```csharp
+var questions = new FoundryQuestionSequence(new[] {
+    new FoundryQuestion("Which scale?", new[] { "1:100 (Recommended)", "1:50" }),
+    new FoundryQuestion("Presentation?", new[] { "Monochrome", "Colour" })
+});
+questions.Submitted += (_, _) => SubmitAnswers(questions.Answers);
+composerHost.Content = questions;
+var customAnswer = new FoundryGrowingTextField(new TextArea(), maximumHeight: 120);
+```
+
+Question controls own their children. Arrow buttons navigate without sending;
+option selection stores an answer and advances. Final Submit is enabled only
+when all answers are nonempty. Consumer owns submission, authorization and
+restoring the normal composer. Full option text is available as a tooltip.
+# Question sequence fixes (preview.24)
+
+Answer rows use `FoundryDialogButton.LeftAlignText`; the default remains centered
+for other actions. `FoundryGrowingTextField` accepts `placeholder: "Say something else..."`.
+Question navigation coalesces UI updates after native callbacks return, retains
+per-question text, and queues final submission before consumers may dispose it.

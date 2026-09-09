@@ -109,6 +109,19 @@ public sealed class FoundryMarkdownMessage : StackLayout
         var editor = new RichTextArea { ReadOnly = true, Wrap = true, BackgroundColor = FoundryTheme.PanelBackground,
             TextColor = color, Font = new Font(SystemFont.Default, size), Height = 32 };
         editor.Rtf = "{\\rtf1\\ansi{\\fonttbl{\\f0 Helvetica;}{\\f1 Menlo;}}{\\colortbl;\\red" + color.Rb + "\\green" + color.Gb + "\\blue" + color.Bb + ";}\\cf1\\f0\\fs" + size * 2 + (bold ? "\\b " : " ") + content + "}";
+        editor.MouseWheel += (_, e) =>
+        {
+            // Read-only prose belongs to the conversation, never to its native
+            // paragraph editor's scrolling surface.
+            Control? parent = editor.Parent;
+            while (parent is not null && parent is not Scrollable) parent = parent.Parent;
+            if (parent is Scrollable page)
+            {
+                var position = page.ScrollPosition;
+                page.ScrollPosition = new Point(position.X, Math.Max(0, position.Y - (int)Math.Round(e.Delta.Height * 40)));
+                e.Handled = true;
+            }
+        };
         var queued = false;
         var width = -1;
         void Fit()

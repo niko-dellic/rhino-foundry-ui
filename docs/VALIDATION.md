@@ -66,3 +66,17 @@ Markdown conversion tests cover headings, emphasis, code, tables and raw HTML
 escaping. Circular composer disabled painting no longer overlays the glyph with
 a square. Native Markdown scrolling, keyboard navigation, sizing, disposal, both
 themes and Windows require host verification; managed tests are not sign-off.
+# Preview.22 candidate limitations
+
+Compiled against provisioned Rhino Mac assemblies. Native question paging,
+tooltips, focus restoration, wheel forwarding and input-height checks are pending;
+the active user conversation has unsent answers and was not restarted. Windows,
+dark/light theme comparison and Retina interaction sign-off are also pending.
+Do not interpret package validation as native visual acceptance.
+# Preview.24 native follow-up
+
+On Rhino Mac, mouse-through of the installed question control passed: select
+both answers, Submit, replace/dispose component, no crash. Left-aligned text,
+placeholder and right-aligned counter baseline visually checked. Preview.23
+also passed back/forward retained-answer navigation. No API calls. Keyboard-only,
+Windows and light-theme checks remain pending.

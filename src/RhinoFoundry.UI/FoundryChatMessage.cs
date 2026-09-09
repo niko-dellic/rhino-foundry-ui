@@ -52,7 +52,7 @@ public sealed class FoundryChatComposer : Panel
         ArgumentNullException.ThrowIfNull(editor);
         editor.BackgroundColor = FoundryTheme.InputBackground;
         editor.TextColor = FoundryTheme.PrimaryText;
-        editor.Height = 72;
+        var growingEditor = new FoundryGrowingTextField(editor, 200, showBorder: false);
         editor.LoadComplete += (_, _) =>
         {
             // The outer Foundry shell owns the border; retain the native text editor and accessibility.
@@ -68,8 +68,8 @@ public sealed class FoundryChatComposer : Panel
         };
         var content = new StackLayout { Padding = new Padding(0, FoundryTheme.Space2),
             HorizontalContentAlignment = HorizontalAlignment.Stretch, Spacing = FoundryTheme.Space2,
-            Items = { editor, new StackLayout { Orientation = Orientation.Horizontal,
+            Items = { growingEditor, new StackLayout { Orientation = Orientation.Horizontal,
                 Items = { new StackLayoutItem(null, true), send, stop } } } };
-        Content = new FoundryFormField(content, 128, editor, horizontalInset: FoundryTheme.Space3, cornerRadius: 16);
+        Content = new FoundryFormField(content, 72, editor, horizontalInset: FoundryTheme.Space3, cornerRadius: 16);
     }
 }

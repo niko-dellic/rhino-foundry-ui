@@ -180,7 +180,7 @@ public sealed class FoundryAccordionTrigger : Drawable
         eventArgs.Graphics.DrawText(
             _font,
             textColor,
-            FoundryTheme.Space2,
+            Quiet ? 0 : FoundryTheme.Space2,
             (Height - titleSize.Height) / 2f,
             _title);
 

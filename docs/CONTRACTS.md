@@ -32,3 +32,11 @@ The library does not silently recover failed host mutations or swallow applicati
 ## Compatibility
 
 The existing five-argument `FoundryFormField` constructor remains available; fixed-height fields use an additional overload. Existing 0.2 icon presets retain their drawings. Layout keeps public/persisted geometry and selection adapters while canonical algorithms live in Primitives. Prerelease API evolution is permitted, but persistence migrations are a consumer responsibility. Never introduce a schema reset as part of a UI extraction.
+# Question and input ownership (preview.22)
+
+`FoundryQuestionSequence` owns its generated controls and retains answer strings
+while navigating. Only final Submit raises `Submitted`; it never grants document
+authorization. Consumers own session persistence and the replacement composer.
+Option buttons use the shared keyboard/focus contract and full-text tooltips.
+`FoundryGrowingTextField` owns its supplied editor and coalesces measurement on
+the UI queue. Empty input stays compact; input scrolls after reaching its cap.

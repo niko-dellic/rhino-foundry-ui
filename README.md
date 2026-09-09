@@ -59,3 +59,8 @@ On a provisioned Mac, restore/build the solution and pack all three `src` projec
 `tools/RhinoFoundry.UI.HostChecks` builds a document-free contract runner and visual gallery. Run its `ComponentChecks.Run()` and `ShowGallery()` inside Rhino's UI thread using the example in `samples/run-host-checks.py`. The ordinary xUnit tests do not initialize Eto or certify native behavior.
 
 Packages remain local until explicit publication. Use `scripts/validate-packages.py` to verify payloads and generate a bundle hash manifest before syncing consumers. Rebuilds during development are staging candidates; once a version is distributed, publish changes under a new version.
+# Preview.22 additions
+
+`FoundryQuestionSequence` replaces a composer with paged questions and retained
+answers. `FoundryGrowingTextField` starts compact and grows to a bounded height.
+Native Windows, theme and keyboard checks for these additions remain pending.
