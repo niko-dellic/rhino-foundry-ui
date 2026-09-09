@@ -92,3 +92,16 @@
 - Bind editor changes to their page instead of the currently displayed question.
 - Left-align questions/options, right-align navigation and add custom-answer placeholder.
 - Correct counter baseline following native mouse-through verification of preview.23.
+# 0.3.0-preview.26
+
+- Growing text fields suppress the native macOS border inside their shared shell.
+- Chat composer height reserves the action row and padding as the editor grows.
+# 0.3.0-preview.27
+
+- Markdown paragraph height accounts for native macOS rich-text layout runs;
+  portable measurement remains the fallback. Native acceptance pending.
+# 0.3.0-preview.29
+
+- Fixed zero-height Eto text measurement by using finite measurement bounds.
+  Native long Markdown paragraphs now expand without internal scrollbars;
+  chat messages and growing editors use the same corrected measurement bound.

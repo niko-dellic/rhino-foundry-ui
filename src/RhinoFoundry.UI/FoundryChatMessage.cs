@@ -33,7 +33,7 @@ public sealed class FoundryChatMessage : PixelLayout
                 // Incoming messages use the label itself as their sized content.
                 label.Height = -1;
                 label.Width = Math.Max(60, width - inset);
-                var height = Math.Max(24, (int)Math.Ceiling(label.GetPreferredSize(new Size(label.Width, -1)).Height));
+                var height = Math.Max(24, (int)Math.Ceiling(label.GetPreferredSize(new Size(label.Width, 100000)).Height));
                 content.Size = new Size(width, height + (outgoing ? FoundryTheme.Space4 * 2 : 0));
                 Height = content.Height;
                 Move(content, outgoing ? Math.Max(0, ClientSize.Width - width) : 0, 0);
@@ -70,6 +70,17 @@ public sealed class FoundryChatComposer : Panel
             HorizontalContentAlignment = HorizontalAlignment.Stretch, Spacing = FoundryTheme.Space2,
             Items = { growingEditor, new StackLayout { Orientation = Orientation.Horizontal,
                 Items = { new StackLayoutItem(null, true), send, stop } } } };
-        Content = new FoundryFormField(content, 72, editor, horizontalInset: FoundryTheme.Space3, cornerRadius: 16);
+        var shell = new FoundryFormField(content, 72, editor, horizontalInset: FoundryTheme.Space3, cornerRadius: 16);
+        Content = shell;
+        void FitComposer()
+        {
+            if (IsDisposed) return;
+            // Reserve the action row and padding even when the editor is empty.
+            var height = growingEditor.Height + 32 + FoundryTheme.Space2 * 3 + 2;
+            if (shell.Height != height) shell.Height = height;
+            if (Height != height) Height = height;
+        }
+        growingEditor.SizeChanged += (_, _) => Application.Instance.AsyncInvoke(FitComposer);
+        LoadComplete += (_, _) => Application.Instance.AsyncInvoke(FitComposer);
     }
 }

@@ -123,7 +123,6 @@ public sealed class FoundryMarkdownMessage : StackLayout
             }
         };
         var queued = false;
-        var width = -1;
         void Fit()
         {
             if (queued || editor.IsDisposed) return;
@@ -131,10 +130,32 @@ public sealed class FoundryMarkdownMessage : StackLayout
             Application.Instance.AsyncInvoke(() =>
             {
                 queued = false;
-                if (editor.IsDisposed || editor.Width <= 0 || width == editor.Width) return;
-                width = editor.Width;
+                if (editor.IsDisposed || editor.Bounds.Width <= 0) return;
+                var width = editor.Bounds.Width;
                 using var measure = new Label { Text = editor.Text, Font = editor.Font, Wrap = WrapMode.Word };
-                editor.Height = Math.Max(32, (int)Math.Ceiling(measure.GetPreferredSize(new Size(Math.Max(40, width - 24), -1)).Height * 1.25) + 16);
+                var height = Math.Max(32, (int)Math.Ceiling(measure.GetPreferredSize(new Size(Math.Max(40, width - 24), 100000)).Height * 1.25) + 16);
+                // RTF font runs can be taller than an ordinary Label. Ask AppKit's
+                // text layout manager for actual laid-out content, not an estimate.
+                if (OperatingSystem.IsMacOS())
+                {
+                    try
+                    {
+                        var native = editor.ControlObject;
+                        var text = native?.GetType().GetProperty("DocumentView")?.GetValue(native) ?? native;
+                        var manager = text?.GetType().GetProperty("LayoutManager")?.GetValue(text);
+                        var container = text?.GetType().GetProperty("TextContainer")?.GetValue(text);
+                        if (manager is not null && container is not null)
+                        {
+                            manager.GetType().GetMethod("EnsureLayoutForTextContainer")?.Invoke(manager, [container]);
+                            var rect = manager.GetType().GetMethod("GetUsedRectForTextContainer")?.Invoke(manager, [container]);
+                            var value = rect?.GetType().GetProperty("Height")?.GetValue(rect)?.ToString();
+                            if (double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var measured))
+                                height = Math.Max(height, (int)Math.Ceiling(measured) + 24);
+                        }
+                    }
+                    catch (Exception) { /* Portable measurement remains the fallback. */ }
+                }
+                if (editor.Height != height) editor.Height = height;
             });
         }
         editor.SizeChanged += (_, _) => Fit();

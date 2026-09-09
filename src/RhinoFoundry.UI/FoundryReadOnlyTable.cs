@@ -24,15 +24,18 @@ public sealed class FoundryReadOnlyTable : Panel
             Application.Instance.AsyncInvoke(() =>
             {
                 queued = false;
-                var width = ClientSize.Width - FoundryTheme.Space2;
+                // Size to the table, not its enclosing panel. Native scroll views
+                // also need room for their gutter, border and column spacing.
+                var width = grid.ClientSize.Width - FoundryTheme.Space4 - headers.Count * FoundryTheme.Space1;
                 if (IsDisposed || width <= 0 || width == lastWidth || headers.Count == 0) return;
                 lastWidth = width;
-                var leading = Math.Max(140, Math.Min(320, width / (headers.Count + 1)));
+                var leading = Math.Max(1, Math.Min(320, width / (headers.Count + 1)));
                 for (var i = 0; i < headers.Count; i++)
-                    grid.Columns[i].Width = i == headers.Count - 1 ? Math.Max(180, width - leading * (headers.Count - 1)) : leading;
+                    grid.Columns[i].Width = i == headers.Count - 1 ? Math.Max(1, width - leading * (headers.Count - 1)) : leading;
             });
         }
         SizeChanged += (_, _) => FitColumns();
+        grid.SizeChanged += (_, _) => FitColumns();
         LoadComplete += (_, _) => FitColumns();
         grid.Height = Math.Min(420, 48 + rows.Count * FoundryTheme.TableRowHeight);
         grid.CellFormatting += (_, args) => FoundryTable.FormatCell(args, ReferenceEquals(args.Item, grid.SelectedItem));
