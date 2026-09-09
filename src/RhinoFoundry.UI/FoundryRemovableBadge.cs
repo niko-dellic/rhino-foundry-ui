@@ -15,23 +15,27 @@ public sealed class FoundryRemovableBadge : Drawable
     private bool _hovered;
     private bool _pressed;
     private bool _showFocusRing;
+    private readonly bool _removable;
 
-    public FoundryRemovableBadge(string text)
+    public FoundryRemovableBadge(string text, bool removable = true)
         : base(true)
     {
         Text = text;
+        _removable = removable;
         _displayText = FitText(text, MaximumWidth - 34);
         var width = Math.Clamp((int)Math.Ceiling(_font.MeasureString(_displayText).Width) + 34, 48, MaximumWidth);
         Size = new Size(width, BadgeHeight);
         MinimumSize = Size;
         BackgroundColor = Colors.Transparent;
-        CanFocus = true;
-        ToolTip = $"Remove {text}";
+        CanFocus = removable;
+        ToolTip = removable ? $"Remove {text}" : text;
+        if (!removable) Width = Math.Max(48, Width - 18);
+        MinimumSize = Size;
 
         Paint += OnPaint;
         MouseEnter += (_, _) =>
         {
-            if (!Enabled) return;
+            if (!Enabled || !_removable) return;
             _hovered = true;
             Invalidate();
         };
@@ -43,7 +47,7 @@ public sealed class FoundryRemovableBadge : Drawable
         };
         MouseDown += (_, eventArgs) =>
         {
-            if (!Enabled || !eventArgs.Buttons.HasFlag(MouseButtons.Primary)) return;
+            if (!Enabled || !_removable || !eventArgs.Buttons.HasFlag(MouseButtons.Primary)) return;
             _pressed = true;
             _showFocusRing = false;
             Focus();
@@ -60,7 +64,7 @@ public sealed class FoundryRemovableBadge : Drawable
         };
         KeyDown += (_, eventArgs) =>
         {
-            if (!Enabled || eventArgs.Key is not (Keys.Enter or Keys.Space)) return;
+            if (!Enabled || !_removable || eventArgs.Key is not (Keys.Enter or Keys.Space)) return;
             Click?.Invoke(this, EventArgs.Empty);
             eventArgs.Handled = true;
         };
@@ -119,6 +123,7 @@ public sealed class FoundryRemovableBadge : Drawable
         var textSize = graphics.MeasureString(_font, _displayText);
         graphics.DrawText(_font, textColor, 8, (Height - textSize.Height) / 2f, _displayText);
 
+        if (!_removable) return;
         var closeColor = Enabled
             ? FoundryTheme.WithAlpha(FoundryTheme.SecondaryText, _hovered ? 255 : 205)
             : FoundryTheme.WithAlpha(FoundryTheme.MutedText, 115);

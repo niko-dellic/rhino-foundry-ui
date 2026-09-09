@@ -1,5 +1,48 @@
 # Consumer guide
 
+### Chat surfaces
+
+`FoundryChatMessage` wraps plain text to 86% of the available width (maximum 760 logical pixels).
+Outgoing messages align right on the same neutral surface as `FoundryChatComposer`;
+incoming text aligns left without a background. The host owns scrolling.
+
+```csharp
+timeline.Items.Add(new FoundryChatMessage("Please review this drawing.", outgoing: true));
+timeline.Items.Add(new FoundryChatMessage("Here is the review.", outgoing: false));
+var composer = new FoundryChatComposer(editor, sendButton, stopButton);
+var conversationIcon = FoundryViewIcons.Conversation();
+```
+
+The composer hosts caller-supplied controls; the host owns send/stop behavior and visibility.
+Native multiline editing, Tab traversal, and button keyboard/focus states are preserved.
+
+`FoundryToolbarIconButton` supports `IsComposerAction = true` for circular send/stop
+actions. Supply a vector icon drawn in `FoundryTheme.PanelBackground`; its surface
+uses `PrimaryText`. Existing mouse, Enter/Space, focus and disabled handling apply.
+Activity text in preview.12 is width-constrained and reflows with the pane.
+
+Activity cards in 0.3.0-preview.11 use borderless text rows and a 280px capture
+thumbnail with an integrated inspection caption. Images remain caller-owned.
+Click or keyboard selection opens the existing image inspector; closing it resets
+selection so the same capture can be opened again.
+
+In 0.3.0-preview.10, `FoundryRemovableBadge(text, removable: false)` provides
+the same badge styling without a remove glyph, focus stop or activation.
+Preflight summaries wrap these badges with available width. Queued resize work
+checks disposal and unchanged widths; all updates belong on the UI thread.
+
+## Preflight summary (0.3.0-preview.8)
+
+```csharp
+var summary = new FoundryPreflightSummary();
+summary.SetSummary(new[] { "Floor plans", "Sections" },
+    new Dictionary<string, string> { ["Destination"] = "Root", ["Page"] = "A3 landscape" });
+```
+
+Read-only presentation: no focus stops or approval events. Facts wrap beneath
+their labels on narrow panes. Each update disposes the previous owned content;
+call on the UI thread. Consumers own validation, readiness messages and actions.
+
 ## Activity surfaces (0.3.0-preview.6)
 
 Version 0.3.0-preview.7 also provides `new FoundryApprovalCard("Review task", reviewContent)`.
@@ -486,3 +529,14 @@ dotnet build YourPlugin.sln --no-restore -c Release -p:FoundryPlatform=Windows
 ```
 
 Run Windows commands on Windows and Mac commands on a provisioned Rhino Mac. Test the exact assembled bundle on clean Rhino profiles. Compare SHA-256 hashes between build output and installed files, then fully quit and reopen Rhino between bundle updates.
+# Read-only Markdown conversation content
+
+```csharp
+var message = new FoundryMarkdownMessage("### Review\n\n**A01** is ready.\n\n| Sheet | Status |\n|---|---|\n| A01 | Reuse |");
+```
+
+The control owns native read-only rich-text and table controls and remeasures
+after width changes. Links display their labels without navigation; raw HTML is
+literal text and images display alt text without fetching. Captured images belong
+in the thumbnail gallery. Deploy the transitive Markdig dependency. Theme colors
+are captured at construction. No embedded browser instances are retained.

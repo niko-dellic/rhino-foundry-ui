@@ -9,6 +9,8 @@ namespace RhinoFoundry.UI;
 /// </summary>
 public sealed class FoundryFormField : PixelLayout
 {
+    /// <summary>Use this shell as a static read-only card, without field hover/focus chrome.</summary>
+    public bool IsReadOnlySurface { get; init; }
     private const int SingleLineHeight = 32;
     private const int SingleLineEditorHeight = 24;
     private readonly Control _input;
@@ -53,7 +55,7 @@ public sealed class FoundryFormField : PixelLayout
         input.MouseLeave += (_, _) => SetHovered(false);
         _interactionControl.GotFocus += (_, _) =>
         {
-            _chrome.Focused = true;
+            _chrome.Focused = !IsReadOnlySurface;
             _chrome.Invalidate();
         };
         _interactionControl.LostFocus += (_, _) =>
@@ -71,7 +73,7 @@ public sealed class FoundryFormField : PixelLayout
 
     private void SetHovered(bool hovered)
     {
-        _chrome.Hovered = hovered;
+        _chrome.Hovered = !IsReadOnlySurface && hovered;
         _chrome.Invalidate();
     }
 

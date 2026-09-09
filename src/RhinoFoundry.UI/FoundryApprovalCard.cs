@@ -20,7 +20,7 @@ public sealed class FoundryApprovalCard : Panel
             HorizontalContentAlignment = HorizontalAlignment.Stretch,
             Items =
             {
-                new Label { Text = title, TextColor = FoundryTheme.PrimaryText, Font = FoundryTheme.BrandFont, TextAlignment = TextAlignment.Left },
+                FoundryPreflightSummary.Left(new Label { Text = title, TextColor = FoundryTheme.PrimaryText, Font = FoundryTheme.BrandFont, TextAlignment = TextAlignment.Left }),
                 reviewContent,
             },
         };

@@ -34,6 +34,15 @@ public sealed class FoundryMultiSelectField : Panel
             .ThenBy(item => item.Label, StringComparer.OrdinalIgnoreCase)
             .ToList();
         _search.PlaceholderText = placeholder;
+        void CloseAfterFocusLeaves()
+        {
+            Application.Instance.AsyncInvoke(() =>
+            {
+                if (!IsDisposed && !_search.HasFocus && !_results.HasFocus) CloseResults();
+            });
+        }
+        _search.LostFocus += (_, _) => CloseAfterFocusLeaves();
+        _results.LostFocus += (_, _) => CloseAfterFocusLeaves();
         _toggle = new FoundryToolbarIconButton(FoundryViewIcons.ChevronDown(), "Show drawing types");
         _toggle.Size = new Size(32, 32);
         _search.TextChanged += (_, _) =>
@@ -178,7 +187,7 @@ public sealed class FoundryMultiSelectField : Panel
         _updating = true;
         _search.Text = string.Empty;
         _updating = false;
-        Filter(show: true, showAll: true);
+        Filter(show: false);
     }
 
     private void Toggle(string value)

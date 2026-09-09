@@ -9,6 +9,8 @@ namespace RhinoFoundry.UI;
 /// </summary>
 public sealed class FoundryToolbarIconButton : Drawable
 {
+    /// <summary>Circular high-contrast composer action. Supply an icon in PanelBackground color.</summary>
+    public bool IsComposerAction { get; init; }
     private readonly bool _isToggle;
     private Image _image;
     private bool _checked;
@@ -133,8 +135,12 @@ public sealed class FoundryToolbarIconButton : Drawable
     private void OnPaint(object? sender, PaintEventArgs eventArgs)
     {
         var bounds = new RectangleF(0.5f, 0.5f, Math.Max(0, Width - 1), Math.Max(0, Height - 1));
-        using var outline = GraphicsPath.GetRoundRect(bounds, 6);
-        if (Checked)
+        using var outline = GraphicsPath.GetRoundRect(bounds, IsComposerAction ? 16 : 6);
+        if (IsComposerAction)
+        {
+            eventArgs.Graphics.FillPath(Enabled ? FoundryTheme.PrimaryText : FoundryTheme.MutedText, outline);
+        }
+        else if (Checked)
         {
             eventArgs.Graphics.FillPath(FoundryTheme.ToolbarActiveBackground, outline);
         }
@@ -165,7 +171,7 @@ public sealed class FoundryToolbarIconButton : Drawable
         var imageY = (Height - imageSize.Height) / 2f;
         eventArgs.Graphics.DrawImage(_image, imageX, imageY);
 
-        if (!Enabled)
+        if (!Enabled && !IsComposerAction)
         {
             eventArgs.Graphics.FillRectangle(
                 FoundryTheme.WithAlpha(FoundryTheme.PanelBackground, 155),

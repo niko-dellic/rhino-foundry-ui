@@ -21,6 +21,14 @@ public static class ComponentChecks
             try { action(); results.Add(new { name, passed = true }); }
             catch (Exception error) { results.Add(new { name, passed = false, error = error.ToString() }); }
         }
+        Check("Preflight replacement and empty content", () =>
+        {
+            using var summary = new FoundryPreflightSummary();
+            summary.SetSummary(["Floor plans"], new Dictionary<string, string> { ["Destination"] = "Root" });
+            Require(summary.Content is StackLayout first && first.Items.Count == 2, "Missing preflight facts.");
+            summary.SetSummary([], new Dictionary<string, string>());
+            Require(summary.Content is StackLayout empty && empty.Items.Count == 0, "Stale preflight content.");
+        });
         Check("Button keyboard and disabled parity", () =>
         {
             using var button = new FoundryDialogButton("Test", FoundryDialogButtonStyle.Secondary);
@@ -98,6 +106,10 @@ public static class ComponentChecks
         };
         canvas.CameraChanged += (_, _) => status.Text = $"Canvas zoom {canvas.CanvasCamera.Zoom:0.00}";
         var content = new FoundryAccordion(
+            new("Chat", new StackLayout { HorizontalContentAlignment = HorizontalAlignment.Stretch, Spacing = 12,
+                Items = { new FoundryChatMessage("Review this drawing. This message should wrap and align to the right.", true),
+                    new FoundryMarkdownMessage("### Drawing review\n\n**Ready** — inspect `A01`.\n\n| Sheet | Status |\n|---|---|\n| A01 | Reuse existing view |\n| A02 | Needs a section |\n\n1. Check the scale.\n2. Review the framing."),
+                    new FoundryChatComposer(new TextArea(), new FoundryDialogButton("Send", FoundryDialogButtonStyle.Secondary), new FoundryDialogButton("Stop", FoundryDialogButtonStyle.Secondary) { Enabled = false }) } }, true),
             new("Actions and fields", new StackLayout { Spacing = 8, Items = {
                 button, new FoundryDialogButton("Disabled", FoundryDialogButtonStyle.Secondary) { Enabled = false },
                 new FoundryFormField(new TextBox { PlaceholderText = "32px field" }),

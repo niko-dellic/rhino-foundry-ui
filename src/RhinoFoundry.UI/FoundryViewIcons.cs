@@ -4,6 +4,17 @@ namespace RhinoFoundry.UI;
 
 public static class FoundryViewIcons
 {
+    /// <summary>Resolution-independent conversation bubble.</summary>
+    public static Icon Conversation() => NewIcon(graphics =>
+    {
+        using var pen = new Pen(FoundryTheme.PrimaryText, 1);
+        using var path = new GraphicsPath();
+        path.MoveTo(3, 2); path.LineTo(13, 2); path.LineTo(14, 3);
+        path.LineTo(14, 10); path.LineTo(13, 11); path.LineTo(7, 11);
+        path.LineTo(3, 14); path.LineTo(3, 11); path.LineTo(2, 10);
+        path.LineTo(2, 3); path.CloseFigure();
+        graphics.DrawPath(pen, path);
+    });
     private const int IconSize = 16;
     private const int BrandMarkSize = 20;
     private const float Hairline = 0.8f;

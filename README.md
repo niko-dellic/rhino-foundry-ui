@@ -1,5 +1,14 @@
 # Rhino Foundry UI
 
+`FoundryMarkdownMessage` (preview.15) renders selectable, read-only Markdown using
+Markdig. Consumers must deploy the transitive `Markdig.dll` dependency. It is a
+presentation-only surface: no remote resources, content scripts or link navigation.
+
+Chat surfaces: `FoundryChatMessage`, `FoundryChatComposer`, and `FoundryViewIcons.Conversation` provide shared conversation presentation; see `docs/USAGE.md`.
+
+`FoundryPreflightSummary` (0.3.0-preview.10) presents wrapping read-only value badges and
+left-aligned, high-contrast request facts. Validation stays in the consumer.
+
 The Drawing Set workspace adds `FoundryActivityTimeline`, `FoundryActivityCard`, and
 `FoundryResourceChip` plus `FoundryApprovalCard` in coordinated prerelease **0.3.0-preview.7**. These controls
 are product-neutral: consumers own execution, approvals, document navigation and image lifetimes.

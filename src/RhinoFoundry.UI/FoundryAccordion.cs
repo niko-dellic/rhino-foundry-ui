@@ -69,6 +69,8 @@ public sealed class FoundryAccordionItem : Panel
 
 public sealed class FoundryAccordionTrigger : Drawable
 {
+    /// <summary>Keep the background unchanged on hover; keyboard focus remains visible.</summary>
+    public bool Quiet { get; init; }
     private readonly Font _font = SystemFonts.Bold(13);
     private readonly string _title;
     private bool _isExpanded;
@@ -165,7 +167,7 @@ public sealed class FoundryAccordionTrigger : Drawable
 
     private void OnPaint(object? sender, PaintEventArgs eventArgs)
     {
-        if (Enabled && (_hovered || _pressed))
+        if (!Quiet && Enabled && (_hovered || _pressed))
             eventArgs.Graphics.FillRectangle(
                 FoundryTheme.WithAlpha(FoundryTheme.CanvasSubtleSurface, _pressed ? 165 : 105),
                 0,

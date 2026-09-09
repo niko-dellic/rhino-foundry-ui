@@ -2,6 +2,53 @@
 
 ## Unreleased
 
+## 0.3.0-preview.18 — native Markdown
+
+- Replace the unreliable Rhino-hosted browser display with native formatted text,
+  lists and tables. No per-message browser, remote navigation or image fetching.
+
+## 0.3.0-preview.17 — mounted Markdown lifecycle
+
+- Load generated HTML after the native browser mounts and ignore its initial blank-page event.
+
+## 0.3.0-preview.16 — native Markdown loading
+
+- Permit Eto's initial generated local HTML document, then block further navigation.
+
+## 0.3.0-preview.15 — readable conversation content
+
+- Add read-only Markdown messages with headings, emphasis, code, lists and tables, using Markdig.
+- Block raw HTML, remote resources and navigation in the Markdown surface.
+- Remove the rectangular disabled overlay from circular composer actions.
+
+## 0.3.0-preview.14 — chat resize correction
+
+- Clear a message label's previous height before measuring wrapped text after pane resizing.
+
+## 0.3.0-preview.13 — conversation surfaces
+
+- Add width-limited incoming/outgoing chat messages and a rounded multiline composer with embedded actions.
+- Add a high-DPI conversation icon. Native editors retain keyboard and accessibility behavior.
+
+## 0.3.0-preview.12 — wrapping and composer controls
+
+- Constrain activity labels to available width and wrap multiline text.
+- Add a high-contrast circular composer variant to the shared icon button.
+
+## 0.3.0-preview.11 — conversation presentation
+
+- Replace boxed activity rows with a quiet left-aligned timeline.
+- Reuse rounded thumbnail-gallery cards for compact, keyboard-accessible capture inspection.
+
+## 0.3.0-preview.10 — preflight layout correction
+
+- Wrap preflight badges using the selector's badge renderer in read-only mode.
+- Anchor facts and approval-card headings to the leading edge under Rhino styling.
+
+## 0.3.0-preview.8 — preflight summary
+
+- Add a read-only preflight summary with value badges and labeled, wrapping facts.
+
 ## 0.3.0-preview.7 — review surface
 
 - Add a neutral, stretch-aligned approval card for consumer-owned editors and actions.

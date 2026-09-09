@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>RhinoFoundry.UI</RootNamespace>
     <AssemblyName>RhinoFoundry.UI</AssemblyName>
-    <Version>0.3.0-preview.7</Version>
+    <Version>0.3.0-preview.21</Version>
     <PackageId>RhinoFoundry.UI</PackageId>
     <Title>Rhino Foundry UI</Title>
     <Authors>niko-dellic</Authors>
@@ -18,6 +18,7 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Markdig" />
     <PackageReference Include="RhinoCommon" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup>

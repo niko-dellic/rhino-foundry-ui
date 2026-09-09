@@ -8,7 +8,7 @@ public sealed class FoundryActivityTimeline : StackLayout
 {
     public FoundryActivityTimeline()
     {
-        Spacing = FoundryTheme.Space2;
+        Spacing = FoundryTheme.Space4;
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
     }
 
@@ -26,24 +26,54 @@ public sealed class FoundryActivityCard : Panel
     public FoundryActivityCard(string title, string state, string? detail = null, Image? image = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
-        BackgroundColor = FoundryTheme.CanvasBorder;
-        Padding = new Padding(1);
+        BackgroundColor = FoundryTheme.PanelBackground;
+        Padding = new Padding(0);
         var body = new StackLayout
         {
-            Padding = new Padding(FoundryTheme.Space3),
+            Padding = new Padding(FoundryTheme.Space2, FoundryTheme.Space3),
             Spacing = FoundryTheme.Space2,
             BackgroundColor = FoundryTheme.PanelBackground,
             HorizontalContentAlignment = HorizontalAlignment.Stretch,
         };
-        body.Items.Add(new Label { Text = title, TextColor = FoundryTheme.PrimaryText, Wrap = WrapMode.Word });
-        body.Items.Add(FoundryTheme.MutedLabel(state));
+        var labels = new List<Label>();
+        Label Text(string value, Color color)
+        {
+            var label = new Label { Text = value, TextColor = color, Wrap = WrapMode.Word,
+                TextAlignment = TextAlignment.Left };
+            label.LoadComplete += (_, _) => { label.TextAlignment = TextAlignment.Right; label.TextAlignment = TextAlignment.Left; };
+            labels.Add(label);
+            return label;
+        }
+        body.Items.Add(Text(title, FoundryTheme.SecondaryText));
+        if (!string.IsNullOrWhiteSpace(state))
+            body.Items.Add(Text(state, FoundryTheme.MutedText));
         if (!string.IsNullOrWhiteSpace(detail))
-            body.Items.Add(new Label { Text = detail, TextColor = FoundryTheme.PrimaryText, Wrap = WrapMode.Word });
+            body.Items.Add(Text(detail, FoundryTheme.PrimaryText));
+        var queued = false;
+        var lastWidth = 0;
+        void FitText()
+        {
+            if (queued || IsDisposed) return;
+            queued = true;
+            Application.Instance.AsyncInvoke(() =>
+            {
+                queued = false;
+                if (IsDisposed) return;
+                var width = Math.Max(80, body.ClientSize.Width - FoundryTheme.Space2 * 2);
+                if (width == lastWidth) return;
+                lastWidth = width;
+                foreach (var label in labels) label.Width = width;
+            });
+        }
+        body.SizeChanged += (_, _) => FitText();
+        body.LoadComplete += (_, _) => FitText();
         if (image is not null)
         {
-            body.Items.Add(new ImageView { Image = image, Height = 180 });
-            var expand = new FoundryDialogButton("Inspect image", FoundryDialogButtonStyle.Secondary);
-            expand.Click += (_, _) =>
+            var preview = new FoundryThumbnailGallery { ToolTip = "Inspect image — click or press Enter",
+                BackgroundColor = FoundryTheme.PanelBackground };
+            preview.SetItems([new FoundryThumbnailItem("Inspect image", image)]);
+            preview.SetLayout(280, 280);
+            preview.SelectionChanged += (_, _) =>
             {
                 var close = new FoundryDialogButton("Close", FoundryDialogButtonStyle.Secondary);
                 var dialog = new Dialog { Title = title, Resizable = true, Size = new Size(800, 650) };
@@ -56,8 +86,9 @@ public sealed class FoundryActivityCard : Panel
                 FoundryDialogActions.Bind(dialog, null, close);
                 dialog.ShowModal(ParentWindow);
                 dialog.Dispose();
+                preview.SetSelectedName(null);
             };
-            body.Items.Add(expand);
+            body.Items.Add(FoundryPreflightSummary.Left(preview));
         }
         Content = body;
     }

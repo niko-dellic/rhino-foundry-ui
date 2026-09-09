@@ -126,12 +126,19 @@
       "rhinofoundry.ui": {
         "type": "Project",
         "dependencies": {
+          "Markdig": "[0.37.0, )",
           "RhinoCommon": "[8.34.26223.11001, )",
-          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.4, )"
+          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.15, )"
         }
       },
       "rhinofoundry.ui.primitives": {
         "type": "Project"
+      },
+      "Markdig": {
+        "type": "CentralTransitive",
+        "requested": "[0.37.0, )",
+        "resolved": "0.37.0",
+        "contentHash": "biiu4MTPFjW55qw6v5Aphtj0MjDLJ14x8ndZwkJUHIeqvaSGKeqhLY7S7Vu/S3k7/c9KwhhnaCDP9hdFNUhcNA=="
       }
     }
   }

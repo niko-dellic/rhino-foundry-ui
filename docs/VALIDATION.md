@@ -1,5 +1,21 @@
 # Release and parity checklist
 
+## Preflight correction — 2026-09-08
+
+0.3.0-preview.10 installed and inspected using Computer in Rhino 8.34 on macOS,
+dark theme. Verified seven selected-drawing badges flow horizontally at wide
+width and wrap into two rows at narrow width; facts and the readiness card align
+left in both sizes. Document geometry was not edited and no AI request was sent.
+Light theme and Windows checks remain outstanding. Existing 17 shared tests and
+478 consumer tests pass; both installed bundle hashes match their staged builds.
+
+## Preflight summary — 2026-09-08
+
+0.3.0-preview.8: managed builds, package validation and existing regression suites
+pass. Native preflight replacement check added to HostChecks. Native visual,
+dark/light, narrow-pane, Retina and Windows checks have not yet been performed
+for this component; this prerelease is not cross-platform sign-off.
+
 ## Drawing Set workspace pass — 2026-09-08
 
 Activity cards, expandable image previews and resource references were exercised
@@ -38,3 +54,15 @@ A successful build is not native sign-off. Record the exact package/binary hashe
 ## Limits
 
 Mouse-wheel automation cannot reproduce every physical two-finger/pinch gesture. A human trackpad check and native Windows sign-off remain release gates. UI migration does not replace the consumers' document safety, PDF, Undo or import recovery validation.
+# Conversation rendering preview.15
+
+Superseded by preview.18's native renderer: Rhino 8.35/macOS dark-theme host gallery
+visually verified headings, emphasis, inline code, tables and numbered lists on
+2026-09-09. Browser-backed candidates rendered blank and are not the current
+implementation. Narrow/wide stress, native text chrome refinement, light theme,
+Windows, keyboard traversal and repeated disposal still need a complete pass.
+
+Markdown conversion tests cover headings, emphasis, code, tables and raw HTML
+escaping. Circular composer disabled painting no longer overlays the glyph with
+a square. Native Markdown scrolling, keyboard navigation, sizing, disposal, both
+themes and Windows require host verification; managed tests are not sign-off.
