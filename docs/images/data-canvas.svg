@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" role="img" aria-labelledby="title desc">
+<title id="title">Tables, galleries &amp; canvas</title><desc id="desc">Flat and hierarchical grids with badge cells, a read-only table with row actions, thumbnail choices and a pan and zoom canvas foundation.</desc>
+<g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+<rect x="0.5" y="0.5" width="959" height="439" rx="12" fill="#fafafa" stroke="#d4d4d8"/>
+<text x="28" y="38" font-size="22" fill="#27272a" font-weight="600">Tables, galleries &amp; canvas</text>
+<text x="28" y="62" font-size="10" fill="#71717a" font-weight="400">COMPONENT ILLUSTRATIONS · LIGHT PALETTE · NOT NATIVE SCREENSHOTS</text>
+<text x="28" y="100" font-size="12" fill="#52525b" font-weight="600">GridView · TreeGridView · Table · BadgeCell&lt;T&gt;</text>
+<rect x="28" y="114" width="420" height="118" rx="6" fill="#ffffff" stroke="#d4d4d8"/>
+<text x="42" y="137" font-size="12" fill="#27272a" font-weight="600">Name</text>
+<text x="310" y="137" font-size="12" fill="#27272a" font-weight="600">Status</text>
+<path d="M28 147H448" stroke="#d4d4d8"/>
+<text x="42" y="170" font-size="13" fill="#27272a" font-weight="400">⌄  Collection</text>
+<rect x="304" y="154" width="122" height="24" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<text x="316" y="171" font-size="12" fill="#27272a" font-weight="400">3 items</text>
+<text x="60" y="204" font-size="13" fill="#27272a" font-weight="400">Item A</text>
+<rect x="304" y="188" width="122" height="24" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<text x="316" y="205" font-size="12" fill="#27272a" font-weight="400">Ready</text>
+<text x="28" y="271" font-size="12" fill="#52525b" font-weight="600">ReadOnlyTable · optional row actions</text>
+<rect x="28" y="285" width="420" height="110" rx="6" fill="#ffffff" stroke="#d4d4d8"/>
+<text x="42" y="308" font-size="12" fill="#27272a" font-weight="600">Item</text>
+<text x="181" y="308" font-size="12" fill="#27272a" font-weight="600">Description</text>
+<path d="M28 318H448" stroke="#d4d4d8"/>
+<text x="42" y="347" font-size="13" fill="#27272a" font-weight="400">Alpha</text>
+<text x="181" y="347" font-size="13" fill="#27272a" font-weight="400">Wrapping text</text>
+<text x="181" y="367" font-size="13" fill="#27272a" font-weight="400">without nested scroll</text>
+<rect x="362" y="335" width="70" height="32" rx="6" fill="#fafafa" stroke="#d4d4d8"/>
+<text x="374" y="356" font-size="13" fill="#27272a" font-weight="400">Open</text>
+<text x="484" y="100" font-size="12" fill="#52525b" font-weight="600">ThumbnailGallery</text>
+<rect x="484" y="114" width="140" height="118" rx="6" fill="#ffffff" stroke="#d4d4d8"/>
+<rect x="496" y="124" width="116" height="74" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<text x="526" y="168" font-size="27" fill="#52525b" font-weight="400">▧</text>
+<text x="496" y="220" font-size="13" fill="#27272a" font-weight="400">Alpha</text>
+<rect x="636" y="114" width="140" height="118" rx="6" fill="#e4e4e7" stroke="#d4d4d8"/>
+<rect x="648" y="124" width="116" height="74" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<text x="678" y="168" font-size="27" fill="#52525b" font-weight="400">▧</text>
+<text x="648" y="220" font-size="13" fill="#27272a" font-weight="400">Beta</text>
+<rect x="788" y="114" width="140" height="118" rx="6" fill="#ffffff" stroke="#d4d4d8"/>
+<rect x="800" y="124" width="116" height="74" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<text x="830" y="168" font-size="27" fill="#52525b" font-weight="400">▧</text>
+<text x="800" y="220" font-size="13" fill="#27272a" font-weight="400">Gamma</text>
+<text x="484" y="271" font-size="12" fill="#52525b" font-weight="600">Canvas · camera, pan &amp; zoom foundations</text>
+<rect x="484" y="285" width="444" height="110" rx="6" fill="#f4f4f5" stroke="#d4d4d8"/>
+<circle cx="500" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="500" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="500" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="500" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="500" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="520" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="520" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="520" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="520" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="520" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="540" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="540" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="540" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="540" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="540" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="560" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="560" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="560" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="560" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="560" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="580" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="580" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="580" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="580" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="580" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="600" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="600" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="600" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="600" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="600" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="620" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="620" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="620" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="620" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="620" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="640" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="640" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="640" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="640" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="640" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="660" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="660" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="660" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="660" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="660" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="680" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="680" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="680" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="680" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="680" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="700" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="700" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="700" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="700" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="700" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="720" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="720" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="720" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="720" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="720" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="740" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="740" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="740" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="740" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="740" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="760" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="760" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="760" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="760" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="760" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="780" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="780" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="780" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="780" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="780" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="800" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="800" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="800" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="800" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="800" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="820" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="820" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="820" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="820" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="820" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="840" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="840" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="840" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="840" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="840" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="860" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="860" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="860" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="860" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="860" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="880" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="880" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="880" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="880" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="880" cy="380" r="0.8" fill="#71717a"/>
+<circle cx="900" cy="300" r="0.8" fill="#71717a"/>
+<circle cx="900" cy="320" r="0.8" fill="#71717a"/>
+<circle cx="900" cy="340" r="0.8" fill="#71717a"/>
+<circle cx="900" cy="360" r="0.8" fill="#71717a"/>
+<circle cx="900" cy="380" r="0.8" fill="#71717a"/>
+<rect x="552" y="304" width="168" height="68" rx="6" fill="#ffffff" stroke="#d4d4d8"/>
+<text x="565" y="330" font-size="14" fill="#27272a" font-weight="600">Your renderer</text>
+<text x="565" y="352" font-size="12" fill="#52525b" font-weight="400">Your world units</text>
+<text x="748" y="345" font-size="13" fill="#27272a" font-weight="400">↔  Pan / zoom</text>
+</g></svg>

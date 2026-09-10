@@ -8,7 +8,7 @@ public sealed class FoundryActivityTimeline : StackLayout
 {
     public FoundryActivityTimeline()
     {
-        Spacing = FoundryTheme.Space4;
+        Spacing = FoundryTheme.Space2;
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
     }
 
@@ -30,7 +30,7 @@ public sealed class FoundryActivityCard : Panel
         Padding = new Padding(0);
         var body = new StackLayout
         {
-            Padding = new Padding(FoundryTheme.Space2, FoundryTheme.Space3),
+            Padding = new Padding(FoundryTheme.Space2, FoundryTheme.Space1),
             Spacing = FoundryTheme.Space2,
             BackgroundColor = FoundryTheme.PanelBackground,
             HorizontalContentAlignment = HorizontalAlignment.Stretch,

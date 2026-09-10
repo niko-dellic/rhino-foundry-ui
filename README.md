@@ -1,25 +1,137 @@
 # Rhino Foundry UI
 
-Preview.36 adds an optional native action-popup hook to avoid macOS text-context augmentation in toolbar menus.
+Preview.37 tightens activity timeline spacing and adds `FoundryAccordionItem(..., isActivity: true)` for muted, borderless activity disclosures.
 
-Preview.34 adds `FoundryEditableTitle` (click-to-rename, keyboard commit/cancel, bounded caption) and generic `FoundryViewIcons.Send`, `Stop`, and `Camera`. Naming policy and persistence remain consumer-owned.
+Shared, theme-aware **Eto.Forms components for Rhino 8 / .NET 8** on Windows and macOS. Build forms, toolbars, data views and conversation surfaces from a common presentation layer.
 
-Preview.31 adds optional question descriptions, recommendation badges, Skip and Cancelled events. Existing string-option callers remain supported. Activity rows group action and state on one muted line.
+**Prerelease: `0.3.0-preview.36`.** Native Windows sign-off is still required before a stable release. See [validation status](docs/VALIDATION.md) and the [changelog](CHANGELOG.md).
 
-`FoundryMarkdownMessage` (preview.15) renders selectable, read-only Markdown using
-Markdig. Consumers must deploy the transitive `Markdig.dll` dependency. It is a
-presentation-only surface: no remote resources, content scripts or link navigation.
+[Usage & examples](docs/USAGE.md) · [Component catalogue](#component-catalogue) · [Installation](#packages-and-installation) · [Contributing](docs/IMPLEMENTING_COMPONENTS.md)
 
-Chat surfaces: `FoundryChatMessage`, `FoundryChatComposer`, and `FoundryViewIcons.Conversation` provide shared conversation presentation; see `docs/USAGE.md`.
+## Component catalogue
 
-`FoundryPreflightSummary` (0.3.0-preview.10) presents wrapping read-only value badges and
-left-aligned, high-contrast request facts. Validation stays in the consumer.
+The boards below are **schematic SVG illustrations, not native screenshots**. They show the available component families using a fixed light palette based on `FoundryTheme`. Actual fonts, colors, layout and native controls follow the Rhino host and platform. Sample text, images and canvas content belong to the consumer.
 
-The Drawing Set workspace adds `FoundryActivityTimeline`, `FoundryActivityCard`, and
-`FoundryResourceChip` plus `FoundryApprovalCard` in coordinated prerelease **0.3.0-preview.7**. These controls
-are product-neutral: consumers own execution, approvals, document navigation and image lifetimes.
+Each public control and composition helper is linked to its source below. For interactive native examples, see [Run the native gallery](#run-the-native-gallery).
 
-Shared Eto.Forms components for Foundry plugins running on Rhino 8 / .NET 8 on Windows and macOS. Version **0.3.0-preview.4** is a coordinated prerelease migration; native Windows sign-off is required before a stable release.
+### Actions & input
+
+Buttons, text entry, field shells and value controls.
+
+![Actions & input: FoundryDialogButton, FoundryDialogActions, FoundryFormField, FoundryToolbarField, FoundrySearchField, FoundryEditableTitle, FoundryGrowingTextField, FoundryCheckBox, FoundryColorField, FoundrySlider, FoundrySurfaceButton, FoundryInsetFormField](docs/images/actions-input.svg)
+
+| Component | What it provides |
+| --- | --- |
+| [`FoundryDialogButton`](src/RhinoFoundry.UI/FoundryDialogButton.cs) | Secondary, primary, destructive and heading actions. |
+| [`FoundryDialogActions`](src/RhinoFoundry.UI/FoundryDialogActions.cs) | Bind dialog Enter/Escape keys to accept/cancel actions. |
+| [`FoundryFormField`](src/RhinoFoundry.UI/FoundryFormField.cs) | Standard field shell around an Eto control. |
+| [`FoundryToolbarField`](src/RhinoFoundry.UI/FoundryToolbarField.cs) | Field shell sized for toolbar use. |
+| [`FoundrySearchField`](src/RhinoFoundry.UI/FoundrySearchField.cs) | Search input with an integrated icon. |
+| [`FoundryEditableTitle`](src/RhinoFoundry.UI/FoundryEditableTitle.cs) | Click to rename; keyboard commit and cancel. |
+| [`FoundryGrowingTextField`](src/RhinoFoundry.UI/FoundryGrowingTextField.cs) | Text editor that grows to a bounded height. |
+| [`FoundryCheckBox`](src/RhinoFoundry.UI/FoundryCheckBox.cs) | Boolean input with keyboard and focus behavior. |
+| [`FoundryColorField`](src/RhinoFoundry.UI/FoundryColorField.cs) | Color value input using a native color dialog. |
+| [`FoundrySlider`](src/RhinoFoundry.UI/FoundrySlider.cs) | Numeric range input with keyboard adjustment. |
+| [`FoundrySurfaceButton`](src/RhinoFoundry.UI/FoundrySurfaceButton.cs) | Explicit 34px compatibility button. |
+| [`FoundryInsetFormField`](src/RhinoFoundry.UI/FoundryInsetFormField.cs) | Explicit 34px compatibility field. |
+
+### Choice & layout
+
+Toolbars, selection controls and reusable panel compositions.
+
+![Choice & layout: FoundryToolbarIconButton, FoundryToolbarButtonGroup, FoundryToolbarSeparator, FoundryViewModeSelector, FoundryTextSegmentedControl, FilteredPicker, FoundryMultiSelectField, FoundryRemovableBadge, FoundryAccordion, FoundryAccordionItem, FoundryAccordionTrigger, FoundryScrollable, FoundryPaneResizeHandle](docs/images/choice-layout.svg)
+
+| Component | What it provides |
+| --- | --- |
+| [`FoundryToolbarIconButton`](src/RhinoFoundry.UI/FoundryToolbarIconButton.cs) | Icon action with tooltip, focus and selected state. |
+| [`FoundryToolbarButtonGroup`](src/RhinoFoundry.UI/FoundryToolbarButtonGroup.cs) | Compose related toolbar buttons. |
+| [`FoundryToolbarSeparator`](src/RhinoFoundry.UI/FoundryToolbarSeparator.cs) | Visual separator between toolbar actions. |
+| [`FoundryViewModeSelector`](src/RhinoFoundry.UI/FoundryViewModeSelector.cs) | Table, thumbnail and canvas mode selection. |
+| [`FoundryTextSegmentedControl`](src/RhinoFoundry.UI/FoundryTextSegmentedControl.cs) | Mutually exclusive text modes. |
+| [`FilteredPicker`](src/RhinoFoundry.UI/FilteredPicker.cs) | Filtered single-choice picker. |
+| [`FoundryMultiSelectField`](src/RhinoFoundry.UI/FoundryMultiSelectField.cs) | Multiple choices displayed as removable values. |
+| [`FoundryRemovableBadge`](src/RhinoFoundry.UI/FoundryRemovableBadge.cs) | Compact value badge with optional removal. |
+| [`FoundryAccordion`](src/RhinoFoundry.UI/FoundryAccordion.cs) | Compose expandable sections. |
+| [`FoundryAccordionItem`](src/RhinoFoundry.UI/FoundryAccordion.cs) | Keep a section trigger and content synchronized. |
+| [`FoundryAccordionTrigger`](src/RhinoFoundry.UI/FoundryAccordion.cs) | Expandable heading for custom compositions. |
+| [`FoundryScrollable`](src/RhinoFoundry.UI/FoundryScrollable.cs) | Coalesced viewport-width synchronization for stable layout. |
+| [`FoundryPaneResizeHandle`](src/RhinoFoundry.UI/FoundryPaneResizeHandle.cs) | Pointer and keyboard requests to resize a pane. |
+
+### Tables, galleries & canvas
+
+Data presentation and spatial foundations. Consumers supply the rows, images and rendering.
+
+![Tables, galleries & canvas: FoundryGridView, FoundryTreeGridView, FoundryTable, FoundryBadgeCell<T>, FoundryReadOnlyTable, FoundryThumbnailGallery, FoundryCanvas](docs/images/data-canvas.svg)
+
+| Component | What it provides |
+| --- | --- |
+| [`FoundryGridView`](src/RhinoFoundry.UI/FoundryTables.cs) | Native flat grid presentation. |
+| [`FoundryTreeGridView`](src/RhinoFoundry.UI/FoundryTables.cs) | Native hierarchical grid presentation. |
+| [`FoundryTable`](src/RhinoFoundry.UI/FoundryTable.cs) | Shared native table styling and formatting helpers. |
+| [`FoundryBadgeCell<T>`](src/RhinoFoundry.UI/FoundryBadgeCell.cs) | Custom-drawn badge cell for native tables. |
+| [`FoundryReadOnlyTable`](src/RhinoFoundry.UI/FoundryReadOnlyTable.cs) | Content-height table with optional wrapping and asynchronous row actions. |
+| [`FoundryThumbnailGallery`](src/RhinoFoundry.UI/FoundryThumbnailGallery.cs) | Responsive image cards, selection and optional drag data. |
+| [`FoundryCanvas`](src/RhinoFoundry.UI/FoundryCanvas.cs) | Drawing surface with camera transforms and batched pan/zoom input. |
+
+### Conversation & review
+
+Compose conversations, questions and review surfaces with consumer-owned workflows.
+
+![Conversation & review: FoundryChatMessage, FoundryMarkdownMessage, FoundryChatComposer, FoundryQuestionSequence, FoundryActivityTimeline, FoundryActivityCard, FoundryResourceChip, FoundryPreflightSummary, FoundryApprovalCard](docs/images/conversation-review.svg)
+
+| Component | What it provides |
+| --- | --- |
+| [`FoundryChatMessage`](src/RhinoFoundry.UI/FoundryChatMessage.cs) | User and assistant message presentation. |
+| [`FoundryMarkdownMessage`](src/RhinoFoundry.UI/FoundryMarkdownMessage.cs) | Selectable, read-only Markdown, including tables. |
+| [`FoundryChatComposer`](src/RhinoFoundry.UI/FoundryChatMessage.cs) | Growing editor with send, stop and optional leading action. |
+| [`FoundryQuestionSequence`](src/RhinoFoundry.UI/FoundryQuestionSequence.cs) | Paged questions with descriptions, recommendations, custom answers and skipping. |
+| [`FoundryActivityTimeline`](src/RhinoFoundry.UI/FoundryActivityTimeline.cs) | Chronological collection of activity rows. |
+| [`FoundryActivityCard`](src/RhinoFoundry.UI/FoundryActivityTimeline.cs) | Action and state with optional detail and image inspection. |
+| [`FoundryResourceChip`](src/RhinoFoundry.UI/FoundryResourceChip.cs) | Compact resource action with a consumer-supplied callback. |
+| [`FoundryPreflightSummary`](src/RhinoFoundry.UI/FoundryPreflightSummary.cs) | Wrapping read-only badges and request facts. |
+| [`FoundryApprovalCard`](src/RhinoFoundry.UI/FoundryApprovalCard.cs) | Titled review container for consumer-supplied content. |
+
+### Themes, icons & platform foundations
+
+These supporting APIs do not have a standalone visual surface.
+
+| API | What it provides |
+| --- | --- |
+| [`FoundryTheme`](src/RhinoFoundry.UI/FoundryTheme.cs) | Semantic colors, typography, spacing, surfaces and hierarchy styling. |
+| [`FoundrySurfaceTheme`](src/RhinoFoundry.UI/FoundrySurfaceTheme.cs) | Theme tokens for the explicit 34px compatibility family. |
+| [`FoundryViewIcons`](src/RhinoFoundry.UI/FoundryViewIcons.cs) | Shared vector icons, including view modes, conversation, send, stop and camera. |
+| [`FoundryMarkdownContent`](src/RhinoFoundry.UI/FoundryMarkdownMessage.cs) | Markdown-to-HTML conversion with raw HTML parsing disabled. |
+| [`FoundryNative`](src/RhinoFoundry.UI/FoundryNative.cs) | Optional native service boundary for input, clipboard, tables and action popups. |
+| [`FoundryMacOS`](src/RhinoFoundry.UI.MacOS/FoundryMacOS.cs) | AppKit adapter initialization for Mac consumers. |
+| [`FoundryCamera`, `FoundryPoint`, `FoundrySize`, `FoundryRect`](src/RhinoFoundry.UI.Primitives/FoundryGeometry.cs) | Host-independent camera and geometry math. |
+| [`FoundrySelectionModel<TKey>`](src/RhinoFoundry.UI.Primitives/FoundrySelectionModel.cs) | Generic selection state and range selection. |
+| [`FoundryThumbnailGridLayout`, `FoundryThumbnailGridRect`](src/RhinoFoundry.UI.Primitives/ThumbnailGridLayout.cs) | Deterministic thumbnail placement. |
+| [`FoundryCanvasGridPolicy`](src/RhinoFoundry.UI.Primitives/FoundryCanvasGridPolicy.cs) | Grid spacing and visibility policy. |
+
+## Start composing
+
+Create controls on Rhino's UI thread after platform initialization. A minimal form composition:
+
+```csharp
+using Eto.Forms;
+using RhinoFoundry.UI;
+
+var name = new TextBox { PlaceholderText = "Name" };
+var include = new FoundryCheckBox("Include in review");
+var review = new FoundryDialogButton("Review", FoundryDialogButtonStyle.Primary);
+// Connect review.Click to your consumer-owned action.
+var content = new StackLayout
+{
+    Spacing = FoundryTheme.Space2,
+    Items = { new FoundryFormField(name), include, review }
+};
+```
+
+The [consumer guide](docs/USAGE.md) covers package setup, platform initialization and copyable examples. The standard control family is 32 logical pixels high; `FoundrySurfaceButton` and `FoundryInsetFormField` preserve a separate 34px compatibility geometry.
+
+This repository owns presentation and input behavior. Consumers own branding, values, validation, authorization, commands, Rhino document changes, persistence, preview generation, image lifetimes and application workflows. File pickers, color dialogs, context menus and message boxes stay native.
+
+`FoundryMarkdownMessage` uses Markdig; consumers must deploy the transitive `Markdig.dll` dependency. It does not load remote resources, execute content scripts or navigate links.
 
 ## Packages and installation
 
@@ -33,21 +145,19 @@ Pin all packages to the same exact version. Consumers vendor the prerelease `.nu
 
 Initialize `RhinoFoundry.UI.MacOS.FoundryMacOS.Initialize()` from each Mac consumer's composition boundary before controls load. Windows uses Eto input and native Windows controls; it must not reference or ship the Mac adapter. Never compile the Mac project using fallback stubs.
 
-## Components
+## Run the native gallery
 
-- `FoundryTheme`: semantic colors, typography, spacing and hierarchy surfaces.
-- `FoundryDialogButton`, `FoundryToolbarIconButton`, `FoundryToolbarButtonGroup`: quiet 32px actions and mode controls.
-- `FoundryFormField`, `FoundryToolbarField`, `FoundryCheckBox`, `FoundryColorField`, `FoundrySlider`: fields with keyboard, disabled and focus behavior.
-- `FoundryAccordion`, `FoundryPaneResizeHandle`, `FoundryTextSegmentedControl`, `FoundryMultiSelectField`, `FilteredPicker`, badges: reusable compositions.
-- `FoundryTable`: native row presentation and formatting; the consumer supplies data, columns, selection and editing commands.
-- `FoundryThumbnailGallery`: responsive image cards, selection and optional drag data. Set `EmptyText` and `DragDataFormat` in the consumer.
-- `FoundryScrollable`: guards and coalesces viewport-width synchronization. This avoids AppKit layout feedback while scrolling an accordion.
-- `FoundryCanvas`: a drawing surface with camera math, batched gestures and disposable native subscriptions. Override occupied overlay hit testing and camera application when a product has its own zoom policy.
-- `FoundrySurfaceButton`, `FoundryInsetFormField`, `FoundrySurfaceTheme`: explicit 34px variants preserving Maps' existing presentation. They are not replacements for the standard 32px family.
+Build [`RhinoFoundry.UI.HostChecks`](tools/RhinoFoundry.UI.HostChecks) and use [`samples/run-host-checks.py`](samples/run-host-checks.py) from Rhino's `RunPythonScript`. Set its `OUTPUT` path (or `FOUNDRY_UI_CHECK_OUTPUT`) to the matching DLL output directory. The script runs document-free contracts before opening `ComponentChecks.ShowGallery()` on Rhino's UI thread.
 
-Product branding, white paper surfaces, Rhino document mutation, persistence, preview generation, domain drag formats, hierarchy rules, card rendering and application workflows remain in consumers. A product-specific rendering class is expected; it should compose these foundations rather than duplicate widget behavior.
+The current native gallery includes conversation controls, questions, editable titles, standard and 34px fields/buttons, checkbox, slider, accordion/scrolling and canvas examples. The catalogue above also documents controls not yet included in that native gallery. Check light/dark themes, keyboard behavior and display scaling in the actual host; illustrations and portable tests do not certify native behavior.
 
-Start with the [consumer guide](docs/USAGE.md) for package setup and copyable component examples. Use [implementing shared components](docs/IMPLEMENTING_COMPONENTS.md) when contributing or extracting a control. See [contracts](docs/CONTRACTS.md), [validation](docs/VALIDATION.md), [0.3 migration notes](docs/MIGRATION_0.3.md), and the [changelog](CHANGELOG.md) for release details.
+To regenerate the README illustrations:
+
+```sh
+python3 scripts/render-readme-gallery.py
+```
+
+The dependency-free generator writes the four SVGs in `docs/images/`. Update its illustrations when component presentation changes.
 
 ## Build and test
 
@@ -65,11 +175,13 @@ On a provisioned Mac, restore/build the solution and pack all three `src` projec
 `tools/RhinoFoundry.UI.HostChecks` builds a document-free contract runner and visual gallery. Run its `ComponentChecks.Run()` and `ShowGallery()` inside Rhino's UI thread using the example in `samples/run-host-checks.py`. The ordinary xUnit tests do not initialize Eto or certify native behavior.
 
 Packages remain local until explicit publication. Use `scripts/validate-packages.py` to verify payloads and generate a bundle hash manifest before syncing consumers. Rebuilds during development are staging candidates; once a version is distributed, publish changes under a new version.
-# Preview.22 additions
 
-`FoundryQuestionSequence` replaces a composer with paged questions and retained
-answers. `FoundryGrowingTextField` starts compact and grows to a bounded height.
-Native Windows, theme and keyboard checks for these additions remain pending.
-# Conversation table and composer options (preview.33)
+## Documentation
 
-`FoundryReadOnlyTable` accepts per-column `wrapColumns` (default false) and an optional asynchronous row action. It grows to content height and contains no nested scroll view. Markdown tables enable wrapping; native hierarchy grids are unchanged. `FoundryChatComposer` accepts an optional `leadingAction` inside its action row.
+- [Usage & examples](docs/USAGE.md) — consumer setup and component recipes.
+- [Contracts](docs/CONTRACTS.md) — input, ownership and lifecycle rules.
+- [Implementing components](docs/IMPLEMENTING_COMPONENTS.md) — contribution and migration requirements.
+- [Validation](docs/VALIDATION.md) — platform checks and outstanding sign-off.
+- [0.3 migration](docs/MIGRATION_0.3.md) — coordinated consumer changes.
+- [Conversation surfaces](docs/CONVERSATION_SURFACES.md) — conversation presentation guidance.
+- [Changelog](CHANGELOG.md) — release history and public API changes.

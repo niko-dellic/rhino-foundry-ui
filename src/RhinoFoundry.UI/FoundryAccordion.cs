@@ -28,11 +28,11 @@ public sealed class FoundryAccordionItem : Panel
     private readonly FoundryAccordionTrigger _trigger;
     private bool _isExpanded;
 
-    public FoundryAccordionItem(string title, Control content, bool isExpanded = false)
+    public FoundryAccordionItem(string title, Control content, bool isExpanded = false, bool isActivity = false)
     {
         ArgumentNullException.ThrowIfNull(content);
         _isExpanded = isExpanded;
-        _trigger = new FoundryAccordionTrigger(title, isExpanded);
+        _trigger = new FoundryAccordionTrigger(title, isExpanded) { IsActivity = isActivity, Quiet = isActivity };
         _trigger.Activated += (_, _) => IsExpanded = !IsExpanded;
         _contentHost = new Panel
         {
@@ -48,7 +48,7 @@ public sealed class FoundryAccordionItem : Panel
             {
                 _trigger,
                 _contentHost,
-                new Panel { Height = 1, BackgroundColor = FoundryTheme.CanvasBorder },
+                new Panel { Height = 1, BackgroundColor = FoundryTheme.CanvasBorder, Visible = !isActivity },
             },
         };
     }
@@ -69,6 +69,8 @@ public sealed class FoundryAccordionItem : Panel
 
 public sealed class FoundryAccordionTrigger : Drawable
 {
+    /// <summary>Muted activity label; disclosure and keyboard behavior remain unchanged.</summary>
+    public bool IsActivity { get; init; }
     /// <summary>Keep the background unchanged on hover; keyboard focus remains visible.</summary>
     public bool Quiet { get; init; }
     private readonly Font _font = SystemFonts.Bold(13);
@@ -175,7 +177,7 @@ public sealed class FoundryAccordionTrigger : Drawable
                 Width,
                 Height);
 
-        var textColor = Enabled ? FoundryTheme.PrimaryText : FoundryTheme.MutedText;
+        var textColor = Enabled ? IsActivity ? FoundryTheme.SecondaryText : FoundryTheme.PrimaryText : FoundryTheme.MutedText;
         var titleSize = eventArgs.Graphics.MeasureString(_font, _title);
         eventArgs.Graphics.DrawText(
             _font,

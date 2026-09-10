@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>RhinoFoundry.UI</RootNamespace>
     <AssemblyName>RhinoFoundry.UI</AssemblyName>
-    <Version>0.3.0-preview.36</Version>
+    <Version>0.3.0-preview.37</Version>
     <PackageId>RhinoFoundry.UI</PackageId>
     <Title>Rhino Foundry UI</Title>
     <Authors>niko-dellic</Authors>
