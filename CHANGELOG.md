@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.3.0-preview.30 — table width fitting
+
+- Fit Markdown table columns to the actual grid bounds, reserving native gutter and column spacing. Allow columns to shrink instead of forcing unnecessary horizontal overflow.
+
 ## 0.3.0-preview.18 — native Markdown
 
 - Replace the unreliable Rhino-hosted browser display with native formatted text,

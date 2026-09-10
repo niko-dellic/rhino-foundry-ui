@@ -26,7 +26,7 @@ public sealed class FoundryReadOnlyTable : Panel
                 queued = false;
                 // Size to the table, not its enclosing panel. Native scroll views
                 // also need room for their gutter, border and column spacing.
-                var width = grid.ClientSize.Width - FoundryTheme.Space4 - headers.Count * FoundryTheme.Space1;
+                var width = grid.Bounds.Width - FoundryTheme.Space4 - headers.Count * FoundryTheme.Space1;
                 if (IsDisposed || width <= 0 || width == lastWidth || headers.Count == 0) return;
                 lastWidth = width;
                 var leading = Math.Max(1, Math.Min(320, width / (headers.Count + 1)));
