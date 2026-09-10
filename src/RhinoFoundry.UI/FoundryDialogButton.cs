@@ -8,6 +8,8 @@ public enum FoundryDialogButtonStyle
     Secondary,
     Primary,
     Destructive,
+    /// <summary>Borderless heading action with larger text; retains hover and keyboard focus.</summary>
+    Heading,
 }
 
 /// <summary>
@@ -17,7 +19,7 @@ public enum FoundryDialogButtonStyle
 public sealed class FoundryDialogButton : Drawable
 {
     private readonly FoundryDialogButtonStyle _style;
-    private readonly Font _font = SystemFonts.Bold(9);
+    private readonly Font _font;
     private string _text;
     private bool _hovered;
     private bool _pressed;
@@ -31,6 +33,7 @@ public sealed class FoundryDialogButton : Drawable
     {
         _text = text;
         _style = style;
+        _font = SystemFonts.Bold(style == FoundryDialogButtonStyle.Heading ? 13 : 9);
         Size = new Size(width, 32);
         BackgroundColor = Colors.Transparent;
         CanFocus = true;
@@ -133,7 +136,8 @@ public sealed class FoundryDialogButton : Drawable
         var border = destructive
             ? FoundryTheme.WithAlpha(FoundryTheme.DangerAccent, Enabled ? 175 : 72)
             : FoundryTheme.WithAlpha(FoundryTheme.CanvasBorder, Enabled ? 205 : 80);
-        graphics.DrawPath(new Pen(border, 1), outline);
+        if (_style != FoundryDialogButtonStyle.Heading)
+            graphics.DrawPath(new Pen(border, 1), outline);
 
         var textColor = !Enabled
             ? FoundryTheme.MutedText

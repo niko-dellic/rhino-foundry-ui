@@ -1,5 +1,29 @@
 # Consumer guide
 
+### Toolbar action menu
+
+```csharp
+if (FoundryNative.Services?.ShowActionMenu(menu, toolbarButton) != true)
+    menu.Show(toolbarButton);
+```
+
+The caller owns the menu and its actions. Use this for toolbar action popups, not text-editor context menus.
+
+### Editable titles and action icons
+
+Titles use a borderless 13pt bold heading action at rest, a quiet hover surface, and a neutral keyboard focus ring. The active rename editor retains its field focus treatment. `FoundryDialogButtonStyle.Heading` exposes the same presentation for other heading actions.
+
+```csharp
+var title = new FoundryEditableTitle("Untitled chat", width: 280);
+title.Committed += (_, _) => SaveName(title.Value); // includes unchanged explicit commits
+title.Value = loadedName; // silent; cancels any open edit
+var sendIcon = FoundryViewIcons.Send(inverse: true);
+var stopIcon = FoundryViewIcons.Stop(inverse: true);
+var cameraIcon = FoundryViewIcons.Camera();
+```
+
+Click or Tab then Enter/Space starts editing. Enter commits, Escape cancels, focus loss commits; blank input cancels. The title owns its native editors. The consumer owns returned icon images and chooses normal or inverse send/stop foreground for the host surface. Icons have 1×/2×/3× frames; recreate after a theme change.
+
 ### Rich questions
 
 ```csharp

@@ -80,3 +80,10 @@ both answers, Submit, replace/dispose component, no crash. Left-aligned text,
 placeholder and right-aligned counter baseline visually checked. Preview.23
 also passed back/forward retained-answer navigation. No API calls. Keyboard-only,
 Windows and light-theme checks remain pending.
+# Preview.34 extraction candidate — 2026-09-10
+
+- Shared title and generic action icons compile with zero warnings/errors; coordinated three-package feed validates.
+- 19 shared portable tests, 65 AI core tests, and 448 Layout core tests pass.
+- Added document-free title commit/cancel, blank input, silent assignment, disabled and disposal HostChecks, plus gallery examples.
+- Candidate is not yet installed or native-verified. Rhino was in a user conversation-export dialog; installation/restart was deferred to avoid interrupting it.
+- Native macOS dark/light, Retina/input and Windows sign-off remain pending. No claim of native parity from the managed build alone.

@@ -4,6 +4,30 @@ namespace RhinoFoundry.UI;
 
 public static class FoundryViewIcons
 {
+    /// <summary>Send arrow. Inverse uses the composer action foreground; caller owns the icon.</summary>
+    public static Icon Send(bool inverse = false) => NewIcon(graphics =>
+    {
+        using var pen = new Pen(inverse ? FoundryTheme.PanelBackground : FoundryTheme.PrimaryText, 1.6f);
+        graphics.DrawLine(pen, 8, 14, 8, 2);
+        graphics.DrawLine(pen, 8, 2, 3, 7);
+        graphics.DrawLine(pen, 8, 2, 13, 7);
+    });
+
+    /// <summary>Stop square. Inverse uses the composer action foreground; caller owns the icon.</summary>
+    public static Icon Stop(bool inverse = false) => NewIcon(graphics =>
+        graphics.FillRectangle(inverse ? FoundryTheme.PanelBackground : FoundryTheme.PrimaryText, 4, 4, 8, 8));
+
+    /// <summary>Generic camera icon; caller owns the returned image.</summary>
+    public static Icon Camera() => NewIcon(graphics =>
+    {
+        using var pen = new Pen(FoundryTheme.PrimaryText, 1f);
+        graphics.DrawLines(pen, new PointF(1.5f, 5), new PointF(4.5f, 5),
+            new PointF(6, 3), new PointF(10, 3), new PointF(11.5f, 5),
+            new PointF(14.5f, 5), new PointF(14.5f, 13),
+            new PointF(1.5f, 13), new PointF(1.5f, 5));
+        graphics.DrawEllipse(pen, 5, 6, 6, 6);
+    });
+
     /// <summary>Resolution-independent conversation bubble.</summary>
     public static Icon Conversation() => NewIcon(graphics =>
     {

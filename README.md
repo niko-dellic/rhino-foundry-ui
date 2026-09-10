@@ -1,5 +1,9 @@
 # Rhino Foundry UI
 
+Preview.36 adds an optional native action-popup hook to avoid macOS text-context augmentation in toolbar menus.
+
+Preview.34 adds `FoundryEditableTitle` (click-to-rename, keyboard commit/cancel, bounded caption) and generic `FoundryViewIcons.Send`, `Stop`, and `Camera`. Naming policy and persistence remain consumer-owned.
+
 Preview.31 adds optional question descriptions, recommendation badges, Skip and Cancelled events. Existing string-option callers remain supported. Activity rows group action and state on one muted line.
 
 `FoundryMarkdownMessage` (preview.15) renders selectable, read-only Markdown using

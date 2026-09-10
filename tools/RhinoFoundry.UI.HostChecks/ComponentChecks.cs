@@ -21,6 +21,30 @@ public static class ComponentChecks
             try { action(); results.Add(new { name, passed = true }); }
             catch (Exception error) { results.Add(new { name, passed = false, error = error.ToString() }); }
         }
+        Check("Editable title commit, cancel, assignment and disabled behavior", () =>
+        {
+            using var title = new FoundryEditableTitle("Untitled chat");
+            var commits = 0;
+            title.Committed += (_, _) => commits++;
+            title.BeginEdit();
+            var field = (FoundryFormField)title.Content!;
+            // The native text editor is owned by the shared field; inspect it only in this host test.
+            var editorField = typeof(FoundryEditableTitle).GetField("_editor", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            var editor = (TextBox)editorField.GetValue(title)!;
+            editor.Text = "  My title  "; Key(editor, Keys.Enter);
+            Require(title.Value == "My title" && commits == 1 && !title.IsEditing, "Commit must trim and fire once.");
+            title.BeginEdit(); editor.Text = "discard"; Key(editor, Keys.Escape);
+            Require(title.Value == "My title" && commits == 1, "Escape committed a change.");
+            title.BeginEdit(); editor.Text = " "; Key(editor, Keys.Enter);
+            Require(title.Value == "My title" && commits == 1, "Blank edit replaced the title.");
+            title.BeginEdit(); title.Value = "Assigned";
+            Require(!title.IsEditing && commits == 1, "Assignment must silently cancel editing.");
+            title.BeginEdit(); title.Enabled = false;
+            title.BeginEdit();
+            Require(!title.IsEditing && commits == 1, "Disabled title accepted input.");
+            title.Enabled = true; title.BeginEdit(); title.Dispose();
+            Require(commits == 1, "Disposal committed an edit.");
+        });
         Check("Preflight replacement and empty content", () =>
         {
             using var summary = new FoundryPreflightSummary();
@@ -117,6 +141,10 @@ public static class ComponentChecks
                 Items = { questions, new FoundryChatMessage("Review this drawing. This message should wrap and align to the right.", true),
                     new FoundryMarkdownMessage("### Drawing review\n\n**Ready** — inspect `A01`.\n\n| Sheet | Status |\n|---|---|\n| A01 | Reuse existing view |\n| A02 | Needs a section |\n\n1. Check the scale.\n2. Review the framing."),
                     new FoundryChatComposer(new TextArea(), new FoundryDialogButton("Send", FoundryDialogButtonStyle.Secondary), new FoundryDialogButton("Stop", FoundryDialogButtonStyle.Secondary) { Enabled = false }) } }, true),
+            new("Editable titles", new StackLayout { Spacing = 8, Items = {
+                new FoundryEditableTitle("Untitled chat"),
+                new FoundryEditableTitle("A long title that should be truncated without losing its full editable value"),
+                new FoundryEditableTitle("Disabled title") { Enabled = false } } }),
             new("Actions and fields", new StackLayout { Spacing = 8, Items = {
                 button, new FoundryDialogButton("Disabled", FoundryDialogButtonStyle.Secondary) { Enabled = false },
                 new FoundryFormField(new TextBox { PlaceholderText = "32px field" }),

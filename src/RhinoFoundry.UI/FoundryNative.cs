@@ -9,6 +9,8 @@ public interface IFoundryNativeServices
     IDisposable? AttachClipboardShortcuts(Control scope, Func<bool> canHandle, Action copy, Action paste);
     void ConfigureAlternatingRows(Grid tree);
     void SelectRows(TreeGridView tree, IReadOnlyList<int> rows);
+    /// <summary>Show a caller-owned action menu without text-context augmentation. False requests the portable fallback.</summary>
+    bool ShowActionMenu(ContextMenu menu, Control anchor) => false;
 }
 public static class FoundryNative
 {

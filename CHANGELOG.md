@@ -123,3 +123,17 @@
 - Fixed zero-height Eto text measurement by using finite measurement bounds.
   Native long Markdown paragraphs now expand without internal scrollbars;
   chat messages and growing editors use the same corrected measurement bound.
+# 0.3.0-preview.35
+
+- Borderless 13pt heading title presentation and coordinated consumer package refresh. Supersedes the uninstalled preview.34 candidate.
+
+# 0.3.0-preview.34
+
+- Editable titles use borderless heading typography, retaining hover and accessible keyboard focus.
+
+- Extracted a product-neutral editable title with silent programmatic assignment and explicit user commits.
+- Added generic send, stop and camera icons, preserving composer inverse foreground and multi-resolution rendering.
+- Added document-free native title lifecycle/input checks and gallery examples. Windows and light-theme native validation remain pending.
+# 0.3.0-preview.36
+
+- Native action popups avoid text-context menu augmentation for toolbar actions. Normal editor context menus are unchanged. Native verification pending installation.

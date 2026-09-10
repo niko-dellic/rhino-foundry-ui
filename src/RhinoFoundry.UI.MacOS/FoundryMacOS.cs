@@ -9,6 +9,21 @@ public static class FoundryMacOS
     public static void Initialize() => FoundryNative.Register(new Services());
     private sealed class Services : IFoundryNativeServices
     {
+        public bool ShowActionMenu(ContextMenu menu, Control anchor)
+        {
+            if (menu.ControlObject is not NSMenu nativeMenu || MacOSHelpers.ToNative(anchor, false) is not { } view)
+                return false;
+            // A toolbar action popup is not a text context menu. Avoid PopUpContextMenu,
+            // which can inject AutoFill when Eto's drawable advertises text-input support.
+            var previous = nativeMenu.AllowsContextMenuPlugIns;
+            try
+            {
+                nativeMenu.AllowsContextMenuPlugIns = false;
+                nativeMenu.PopUpMenu(null, new CoreGraphics.CGPoint(0, view.IsFlipped ? view.Bounds.Height : 0), view);
+            }
+            finally { nativeMenu.AllowsContextMenuPlugIns = previous; }
+            return true;
+        }
         public IDisposable AttachCanvas(Control control, Func<PointF,bool> overlay, Action<double,double> pan, Action<double,PointF> zoom) => new Gestures(control, overlay, pan, zoom);
         public IDisposable AttachClipboardShortcuts(Control scope, Func<bool> canHandle, Action copy, Action paste) =>
             new ClipboardShortcuts(scope, canHandle, copy, paste);
