@@ -137,3 +137,7 @@
 # 0.3.0-preview.36
 
 - Native action popups avoid text-context menu augmentation for toolbar actions. Normal editor context menus are unchanged. Native verification pending installation.
+# 0.3.0-preview.37
+
+- Reduced activity row vertical padding and timeline gaps.
+- Added muted accordion activity styling for answer histories and similar disclosures.

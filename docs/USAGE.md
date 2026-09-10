@@ -1,5 +1,14 @@
 # Consumer guide
 
+### Activity disclosures
+
+```csharp
+var answers = new FoundryAccordionItem("Answers submitted",
+    new FoundryChatMessage(questionAndAnswerText, outgoing: false), isActivity: true);
+```
+
+Starts collapsed; click or Enter/Space toggles. Activity styling uses muted text and no separator; normal accordions retain their existing appearance. No submission or permission behavior is owned by the disclosure.
+
 ### Toolbar action menu
 
 ```csharp

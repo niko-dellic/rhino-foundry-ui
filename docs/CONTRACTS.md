@@ -51,3 +51,6 @@ FoundryReadOnlyTable copies header/row values and requires at least one header. 
 # Native action menus (preview.36)
 
 `IFoundryNativeServices.ShowActionMenu(menu, anchor)` optionally shows a caller-owned native menu as an action popup, not an editor context menu. Call on the UI thread; true means handled, including cancellation; false means call Eto's `menu.Show(anchor)`. The Mac adapter uses `NSMenu.PopUpMenu` and temporarily disables context plugins, restoring the prior setting after tracking. It owns no menu, view, event subscription or document. Existing native service implementations default to false. Normal editor menus and OS file pickers are unchanged.
+# Activity disclosure (preview.37)
+
+The optional `isActivity` constructor flag gives an accordion muted heading text, quiet hover and no bottom rule. Expansion, keyboard, focus, child ownership and disabled behavior are unchanged. Activity timeline gaps are Space2 and card vertical padding is Space1; larger image/detail content still determines its own height.
