@@ -13,6 +13,8 @@ public sealed class FoundryQuestionSequence : Panel
     private bool _renderQueued;
     private bool _submitted;
     public event EventHandler? Submitted;
+    /// <summary>Raised asynchronously when the user closes the sequence; nothing is submitted.</summary>
+    public event EventHandler? Cancelled;
     public IReadOnlyList<string> Answers => _answers.ToArray();
 
     public FoundryQuestionSequence(IReadOnlyList<FoundryQuestion> questions)
@@ -22,7 +24,17 @@ public sealed class FoundryQuestionSequence : Panel
         _answers = new string[questions.Count];
         _customDrafts = new string[questions.Count];
         Content = _body;
+        Padding = new Eto.Drawing.Padding(FoundryTheme.Space3);
+        BackgroundColor = FoundryTheme.PanelBackground;
+        KeyDown += (_, e) => { if (e.Key == Keys.Escape) { e.Handled = true; Cancel(); } };
         Render();
+    }
+
+    private void Cancel()
+    {
+        if (_submitted || IsDisposed) return;
+        _submitted = true;
+        Application.Instance.AsyncInvoke(() => { if (!IsDisposed) Cancelled?.Invoke(this, EventArgs.Empty); });
     }
 
     private void Render()
@@ -77,15 +89,20 @@ public sealed class FoundryQuestionSequence : Panel
         next.Click += (_, _) => { if (_renderQueued) return; _index = Math.Min(_questions.Count - 1, pageIndex + 1); Render(); };
         var counter = FoundryTheme.MutedLabel($"{_index + 1} of {_questions.Count}");
         counter.TextAlignment = TextAlignment.Center;
-        var counterHost = new Panel { Height = 32, Padding = new Eto.Drawing.Padding(0, 8), Content = counter };
-        _body.Items.Add(new StackLayout { Orientation = Orientation.Horizontal, Spacing = FoundryTheme.Space2,
-            Items = { new StackLayoutItem(null, true), previous, counterHost, next } });
+        counter.VerticalAlignment = VerticalAlignment.Center;
+        var counterHost = new Panel { Height = 32, Content = counter };
+        var close = new FoundryToolbarIconButton(FoundryViewIcons.Close(), "Cancel questions without submitting");
+        close.Click += (_, _) => Cancel();
         var title = new Label { Text = question.Text, Wrap = WrapMode.Word, TextAlignment = TextAlignment.Left, TextColor = FoundryTheme.PrimaryText };
         title.LoadComplete += (_, _) => { title.TextAlignment = TextAlignment.Right; title.TextAlignment = TextAlignment.Left; };
-        _body.Items.Add(title);
-        foreach (var answer in question.Options)
+        _body.Items.Add(new StackLayout { Orientation = Orientation.Horizontal, Spacing = FoundryTheme.Space2,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Items = { new StackLayoutItem(title, true), previous, counterHost, next, close } });
+        for (var optionIndex = 0; optionIndex < question.Options.Count; optionIndex++)
         {
-            var option = new FoundryDialogButton(answer, FoundryDialogButtonStyle.Secondary) { ToolTip = answer, LeftAlignText = true };
+            var answer = question.Options[optionIndex];
+            var description = question.Descriptions is { } descriptions && optionIndex < descriptions.Count ? descriptions[optionIndex] : "";
+            var option = new FoundryQuestionAnswer(optionIndex + 1, answer, description);
             option.Click += (_, _) =>
             {
                 Answer(pageIndex, answer);
@@ -94,7 +111,13 @@ public sealed class FoundryQuestionSequence : Panel
         }
         var editor = new TextArea { Text = _customDrafts[pageIndex] ?? "", Wrap = true, ToolTip = "Say something else…" };
         editor.TextChanged += (_, _) => _customDrafts[pageIndex] = editor.Text;
-        _body.Items.Add(new FoundryGrowingTextField(editor, 120, placeholder: "Say something else..."));
+        var pencil = new FoundryToolbarIconButton(FoundryViewIcons.Pencil(), "Write a custom answer");
+        pencil.Click += (_, _) => editor.Focus();
+        var skip = new FoundryDialogButton("Skip", FoundryDialogButtonStyle.Secondary, 60) { ToolTip = "Leave this question unanswered and continue" };
+        skip.Click += (_, _) => Answer(pageIndex, "[Skipped — no answer supplied]");
+        _body.Items.Add(new StackLayout { Orientation = Orientation.Horizontal, Spacing = FoundryTheme.Space2,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Items = { pencil, new StackLayoutItem(new FoundryGrowingTextField(editor, 120, placeholder: "Say something else..."), true), skip } });
         {
             var submit = new FoundryDialogButton("Use custom answer", FoundryDialogButtonStyle.Secondary);
             void Update() => submit.Visible = !string.IsNullOrWhiteSpace(editor.Text);
@@ -115,4 +138,7 @@ public sealed class FoundryQuestionSequence : Panel
     }
 }
 
-public sealed record FoundryQuestion(string Text, IReadOnlyList<string> Options);
+public sealed record FoundryQuestion(string Text, IReadOnlyList<string> Options)
+{
+    public IReadOnlyList<string>? Descriptions { get; init; }
+}

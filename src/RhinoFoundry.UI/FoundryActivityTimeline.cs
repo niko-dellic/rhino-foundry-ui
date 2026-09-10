@@ -44,9 +44,10 @@ public sealed class FoundryActivityCard : Panel
             labels.Add(label);
             return label;
         }
-        body.Items.Add(Text(title, FoundryTheme.SecondaryText));
-        if (!string.IsNullOrWhiteSpace(state))
-            body.Items.Add(Text(state, FoundryTheme.MutedText));
+        var symbol = title.Contains("question", StringComparison.OrdinalIgnoreCase) ? "?" :
+            title.Contains("captur", StringComparison.OrdinalIgnoreCase) ? "▣" :
+            state == "Finished" ? "✓" : state == "Running" ? "◌" : "›";
+        body.Items.Add(Text(symbol + "  " + title + (string.IsNullOrWhiteSpace(state) ? "" : " · " + state), FoundryTheme.SecondaryText));
         if (!string.IsNullOrWhiteSpace(detail))
             body.Items.Add(Text(detail, FoundryTheme.PrimaryText));
         var queued = false;

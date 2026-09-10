@@ -401,6 +401,17 @@ public static class FoundryViewIcons
         graphics.DrawLine(pen, 6, 10, 1.5f, 10);
     });
 
+    public static Icon Pencil() => NewIcon(graphics =>
+    {
+        using var pen = new Pen(FoundryTheme.SecondaryText, Hairline);
+        graphics.DrawLine(pen, 3, 10, 10, 3);
+        graphics.DrawLine(pen, 10, 3, 13, 6);
+        graphics.DrawLine(pen, 13, 6, 6, 13);
+        graphics.DrawLine(pen, 6, 13, 2, 14);
+        graphics.DrawLine(pen, 2, 14, 3, 10);
+        graphics.DrawLine(pen, 9, 4, 12, 7);
+    });
+
     public static Icon Close() => NewIcon(graphics =>
     {
         var pen = new Pen(FoundryTheme.PrimaryText, Emphasis);

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0-preview.33
+
+- Content-height read-only tables with per-column wrapping; Markdown tables wrap and no longer trap scrolling.
+- Optional leading composer action for attachment menus.
+
+## 0.3.0-preview.32
+
+- Preserve Eto-owned system fonts when drawing rich question rows; repeated native paints no longer dispose shared fonts.
+
+## 0.3.0-preview.31
+
+- Rich question rows with descriptions, recommendation badges, pencil trigger, Skip and asynchronous Cancelled event.
+- Compact muted activity rows distinguish actions from communication.
+
 ## Unreleased
 
 ## 0.3.0-preview.30 — table width fitting

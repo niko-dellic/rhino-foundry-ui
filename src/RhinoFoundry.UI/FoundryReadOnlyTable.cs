@@ -3,56 +3,78 @@ using Eto.Forms;
 
 namespace RhinoFoundry.UI;
 
-/// <summary>Read-only native table using the same presentation as Foundry hierarchy tables.
-/// Rows are borrowed immutable values. Double-click a row to inspect its full text.</summary>
-public sealed class FoundryReadOnlyTable : Panel
+/// <summary>Content-height table with per-column wrapping and no nested scroll view.
+/// Values are copied. Optional row actions run asynchronously on the UI thread.</summary>
+public sealed class FoundryReadOnlyTable : PixelLayout
 {
-    public FoundryReadOnlyTable(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows)
+    public FoundryReadOnlyTable(IReadOnlyList<string> headers, IReadOnlyList<string[]> rows,
+        IReadOnlyList<bool>? wrapColumns = null, Action<int>? rowAction = null)
     {
-        var grid = new GridView { AllowMultipleSelection = false };
-        FoundryTable.Configure(grid);
-        for (var i = 0; i < headers.Count; i++)
-            grid.Columns.Add(new GridColumn { HeaderText = headers[i], DataCell = new TextBoxCell(i), Editable = false,
-                Width = i == headers.Count - 1 ? 360 : 220, Resizable = true, AutoSize = false });
-        grid.DataStore = rows;
+        if (headers.Count == 0) throw new ArgumentException("At least one column is required.", nameof(headers));
+        if (wrapColumns is not null && wrapColumns.Count != headers.Count)
+            throw new ArgumentException("Provide one wrapping flag per column.", nameof(wrapColumns));
+        var values = new[] { headers.ToArray() }.Concat(rows.Select(r => r.ToArray())).ToArray();
+        var labels = new List<(Label Label, int Row, int Column)>();
+        var backgrounds = new List<Panel>();
+        var actions = new List<FoundryDialogButton>();
+        for (var r = 0; r < values.Length; r++)
+        {
+            var background = new Panel { BackgroundColor = r == 0 || r % 2 == 1
+                ? FoundryTheme.ContentBackground : FoundryTheme.HierarchyAlternateRowBackground };
+            backgrounds.Add(background); Add(background, 0, 0);
+            for (var c = 0; c < headers.Count; c++)
+            {
+                var value = c < values[r].Length ? values[r][c] : "";
+                var label = new Label { Text = value, ToolTip = value,
+                    Wrap = r == 0 || wrapColumns?[c] == true ? WrapMode.Word : WrapMode.None,
+                    TextColor = FoundryTheme.PrimaryText, TextAlignment = TextAlignment.Left,
+                    Font = r == 0 ? SystemFonts.Bold() : FoundryTheme.HierarchyTableFont };
+                label.LoadComplete += (_, _) => { label.TextAlignment = TextAlignment.Right; label.TextAlignment = TextAlignment.Left; };
+                labels.Add((label, r, c)); Add(label, 0, 0);
+            }
+            if (r > 0 && rowAction is not null)
+            {
+                var index = r - 1;
+                var open = new FoundryDialogButton("Open", FoundryDialogButtonStyle.Secondary, 64);
+                open.Click += (_, _) => Application.Instance.AsyncInvoke(() => { if (!IsDisposed) rowAction(index); });
+                actions.Add(open); Add(open, 0, 0);
+            }
+        }
         var queued = false;
         var lastWidth = -1;
-        void FitColumns()
+        void Fit()
         {
             if (queued || IsDisposed) return;
             queued = true;
             Application.Instance.AsyncInvoke(() =>
             {
                 queued = false;
-                // Size to the table, not its enclosing panel. Native scroll views
-                // also need room for their gutter, border and column spacing.
-                var width = grid.Bounds.Width - FoundryTheme.Space4 - headers.Count * FoundryTheme.Space1;
-                if (IsDisposed || width <= 0 || width == lastWidth || headers.Count == 0) return;
-                lastWidth = width;
-                var leading = Math.Max(1, Math.Min(320, width / (headers.Count + 1)));
-                for (var i = 0; i < headers.Count; i++)
-                    grid.Columns[i].Width = i == headers.Count - 1 ? Math.Max(1, width - leading * (headers.Count - 1)) : leading;
+                if (IsDisposed || ClientSize.Width <= 0 || lastWidth == ClientSize.Width) return;
+                lastWidth = ClientSize.Width;
+                var available = Math.Max(headers.Count, lastWidth - (rowAction is null ? 0 : 72));
+                var columnWidth = Math.Max(1, available / headers.Count);
+                var y = 0;
+                for (var r = 0; r < values.Length; r++)
+                {
+                    var height = rowAction is null ? FoundryTheme.TableRowHeight : 40;
+                    foreach (var cell in labels.Where(l => l.Row == r))
+                    {
+                        cell.Label.Height = -1;
+                        cell.Label.Width = Math.Max(1, columnWidth - FoundryTheme.Space3 * 2);
+                        height = Math.Max(height, (int)Math.Ceiling(cell.Label.GetPreferredSize(new Size(cell.Label.Width, 100000)).Height) + FoundryTheme.Space2 * 2);
+                    }
+                    backgrounds[r].Size = new Size(lastWidth, height); Move(backgrounds[r], 0, y);
+                    foreach (var cell in labels.Where(l => l.Row == r))
+                    {
+                        cell.Label.Height = height - FoundryTheme.Space2 * 2;
+                        Move(cell.Label, cell.Column * columnWidth + FoundryTheme.Space3, y + FoundryTheme.Space2);
+                    }
+                    if (r > 0 && rowAction is not null) Move(actions[r - 1], lastWidth - 68, y + 4);
+                    y += height;
+                }
+                Height = y;
             });
         }
-        SizeChanged += (_, _) => FitColumns();
-        grid.SizeChanged += (_, _) => FitColumns();
-        LoadComplete += (_, _) => FitColumns();
-        grid.Height = Math.Min(420, 48 + rows.Count * FoundryTheme.TableRowHeight);
-        grid.CellFormatting += (_, args) => FoundryTable.FormatCell(args, ReferenceEquals(args.Item, grid.SelectedItem));
-        string Describe(string[] row) => string.Join("\n\n", headers.Select((header, index) => header + ": " + (index < row.Length ? row[index] : "")));
-        grid.SelectionChanged += (_, _) => grid.ToolTip = grid.SelectedItem is string[] row ? Describe(row) : "Double-click a row to inspect its full text.";
-        grid.CellDoubleClick += (_, args) =>
-        {
-            if (args.Item is not string[] row) return;
-            using var dialog = new Dialog { Title = "Table row", Size = new Size(620, 420), Resizable = true };
-            var close = new FoundryDialogButton("Close", FoundryDialogButtonStyle.Secondary);
-            close.Click += (_, _) => dialog.Close();
-            dialog.Content = new StackLayout { Padding = FoundryTheme.Space3, HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                Items = { new StackLayoutItem(new FoundryScrollable(new FoundryChatMessage(Describe(row), false)), true), close } };
-            FoundryDialogActions.Bind(dialog, null, close);
-            dialog.ShowModal(ParentWindow);
-        };
-        Content = grid;
-        Height = grid.Height;
+        SizeChanged += (_, _) => Fit(); LoadComplete += (_, _) => Fit();
     }
 }

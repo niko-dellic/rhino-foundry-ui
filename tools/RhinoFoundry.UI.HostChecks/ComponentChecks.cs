@@ -96,6 +96,13 @@ public static class ComponentChecks
     public static Form ShowGallery()
     {
         var status = new Label { Text = "Ready. Use Tab, Enter, Space, arrows and scroll." };
+        var questions = new FoundryQuestionSequence(new[] {
+            new FoundryQuestion("How should the review proceed?", new[] { "Explain gains and losses (Recommended)", "Choose a primary goal" }) {
+                Descriptions = new[] { "Summarize measured improvements and regressions without a weighted score.", "Choose a goal before testing and show the other trade-offs." }
+            }, new FoundryQuestion("Include the optional comparison?", new[] { "Include", "Exclude" })
+        });
+        questions.Submitted += (_, _) => status.Text = string.Join("; ", questions.Answers);
+        questions.Cancelled += (_, _) => status.Text = "Cancelled without submission";
         var button = new FoundryDialogButton("Action", FoundryDialogButtonStyle.Secondary);
         button.Click += (_, _) => status.Text = "Action activated";
         var canvas = new TestCanvas { Height = 180, BackgroundColor = FoundryTheme.CanvasBackground };
@@ -107,7 +114,7 @@ public static class ComponentChecks
         canvas.CameraChanged += (_, _) => status.Text = $"Canvas zoom {canvas.CanvasCamera.Zoom:0.00}";
         var content = new FoundryAccordion(
             new("Chat", new StackLayout { HorizontalContentAlignment = HorizontalAlignment.Stretch, Spacing = 12,
-                Items = { new FoundryChatMessage("Review this drawing. This message should wrap and align to the right.", true),
+                Items = { questions, new FoundryChatMessage("Review this drawing. This message should wrap and align to the right.", true),
                     new FoundryMarkdownMessage("### Drawing review\n\n**Ready** — inspect `A01`.\n\n| Sheet | Status |\n|---|---|\n| A01 | Reuse existing view |\n| A02 | Needs a section |\n\n1. Check the scale.\n2. Review the framing."),
                     new FoundryChatComposer(new TextArea(), new FoundryDialogButton("Send", FoundryDialogButtonStyle.Secondary), new FoundryDialogButton("Stop", FoundryDialogButtonStyle.Secondary) { Enabled = false }) } }, true),
             new("Actions and fields", new StackLayout { Spacing = 8, Items = {

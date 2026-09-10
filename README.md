@@ -1,5 +1,7 @@
 # Rhino Foundry UI
 
+Preview.31 adds optional question descriptions, recommendation badges, Skip and Cancelled events. Existing string-option callers remain supported. Activity rows group action and state on one muted line.
+
 `FoundryMarkdownMessage` (preview.15) renders selectable, read-only Markdown using
 Markdig. Consumers must deploy the transitive `Markdig.dll` dependency. It is a
 presentation-only surface: no remote resources, content scripts or link navigation.
@@ -64,3 +66,6 @@ Packages remain local until explicit publication. Use `scripts/validate-packages
 `FoundryQuestionSequence` replaces a composer with paged questions and retained
 answers. `FoundryGrowingTextField` starts compact and grows to a bounded height.
 Native Windows, theme and keyboard checks for these additions remain pending.
+# Conversation table and composer options (preview.33)
+
+`FoundryReadOnlyTable` accepts per-column `wrapColumns` (default false) and an optional asynchronous row action. It grows to content height and contains no nested scroll view. Markdown tables enable wrapping; native hierarchy grids are unchanged. `FoundryChatComposer` accepts an optional `leadingAction` inside its action row.

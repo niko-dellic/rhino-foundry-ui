@@ -1,5 +1,19 @@
 # Consumer guide
 
+### Rich questions
+
+```csharp
+var questions = new FoundryQuestionSequence(new[] {
+    new FoundryQuestion("Which scope?", new[] { "Selected (Recommended)", "All" }) {
+        Descriptions = new[] { "Review selected items.", "Review every available item." }
+    }
+});
+questions.Submitted += (_, _) => ConsumeAnswers(questions.Answers);
+questions.Cancelled += (_, _) => RestoreComposer();
+```
+
+Skip records `[Skipped — no answer supplied]`, not approval. X/Escape cancels without submitting. Enter/Space activates an option; Enter submits custom text. Full options are available as tooltips.
+
 ### Chat surfaces
 
 `FoundryChatMessage` wraps plain text to 86% of the available width (maximum 760 logical pixels).
@@ -562,3 +576,13 @@ Answer rows use `FoundryDialogButton.LeftAlignText`; the default remains centere
 for other actions. `FoundryGrowingTextField` accepts `placeholder: "Say something else..."`.
 Question navigation coalesces UI updates after native callbacks return, retains
 per-question text, and queues final submission before consumers may dispose it.
+# Content-height conversation tables
+
+```csharp
+var table = new FoundryReadOnlyTable(
+    ["Sheets", "Finding", "Follow-up"], rows,
+    wrapColumns: [false, true, true]);
+var composer = new FoundryChatComposer(editor, send, stop, attachmentButton);
+```
+
+Place the table in the conversation's scroll container. Do not wrap it in another scrolling surface. All values have full-text tooltips; optional row actions expose keyboard-accessible Open buttons.

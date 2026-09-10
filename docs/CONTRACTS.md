@@ -1,5 +1,7 @@
 # Component contracts
 
+Question cancellation never raises Submitted. Skip completes the question with an explicit unanswered marker. Submission/cancellation callbacks run after native input unwinds; hosts own replacement/disposal. Descriptions are optional and preserve string-option construction. Each sequence owns its answer and custom-draft arrays.
+
 ## Activity and review surfaces
 
 ActivityTimeline owns its child rows; image data remains caller-owned until the
@@ -40,3 +42,6 @@ authorization. Consumers own session persistence and the replacement composer.
 Option buttons use the shared keyboard/focus contract and full-text tooltips.
 `FoundryGrowingTextField` owns its supplied editor and coalesces measurement on
 the UI queue. Empty input stays compact; input scrolls after reaching its cap.
+# Content-height table contract
+
+FoundryReadOnlyTable copies header/row values and requires at least one header. A supplied wrapping list must match the column count. Wrapping defaults off. Height is recalculated after width changes through a coalesced UI callback; there is no internal scrolling. Optional row actions execute asynchronously and are suppressed after disposal. System fonts remain framework-owned. FoundryChatComposer's optional leading action is a child of the composer and follows the normal Eto control lifetime.

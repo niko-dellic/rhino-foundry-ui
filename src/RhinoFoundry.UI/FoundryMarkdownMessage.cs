@@ -40,7 +40,7 @@ public sealed class FoundryMarkdownMessage : StackLayout
                 }
                 rows.Add(cells.ToArray());
             }
-            if (rows.Count > 0) Items.Add(new FoundryReadOnlyTable(rows[0], rows.Skip(1).ToArray()));
+            if (rows.Count > 0) Items.Add(new FoundryReadOnlyTable(rows[0], rows.Skip(1).ToArray(), rows[0].Select(_ => true).ToArray()));
         }
         else if (block is ListBlock list)
         {

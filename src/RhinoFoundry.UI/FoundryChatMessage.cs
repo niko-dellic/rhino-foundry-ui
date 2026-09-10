@@ -47,7 +47,7 @@ public sealed class FoundryChatMessage : PixelLayout
 /// <summary>Rounded multiline composer. The caller owns sending/cancellation; native editing and Tab order are retained.</summary>
 public sealed class FoundryChatComposer : Panel
 {
-    public FoundryChatComposer(TextArea editor, Control send, Control stop)
+    public FoundryChatComposer(TextArea editor, Control send, Control stop, Control? leadingAction = null)
     {
         ArgumentNullException.ThrowIfNull(editor);
         editor.BackgroundColor = FoundryTheme.InputBackground;
@@ -69,7 +69,7 @@ public sealed class FoundryChatComposer : Panel
         var content = new StackLayout { Padding = new Padding(0, FoundryTheme.Space2),
             HorizontalContentAlignment = HorizontalAlignment.Stretch, Spacing = FoundryTheme.Space2,
             Items = { growingEditor, new StackLayout { Orientation = Orientation.Horizontal,
-                Items = { new StackLayoutItem(null, true), send, stop } } } };
+                Items = { leadingAction, new StackLayoutItem(null, true), send, stop } } } };
         var shell = new FoundryFormField(content, 72, editor, horizontalInset: FoundryTheme.Space3, cornerRadius: 16);
         Content = shell;
         void FitComposer()
