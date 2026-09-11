@@ -169,7 +169,7 @@ Move one component family at a time:
 1. Capture the consumer's current geometry, events, shortcuts, disabled behavior, and native workaround.
 2. Add equivalent tests or HostChecks in this repository.
 3. Implement the shared component and document its contract.
-4. Pack a new prerelease version.
+4. Pack a new package version.
 5. Update one consumer to the package and remove only the replaced implementation.
 6. Run that consumer's tests and native smoke checks.
 7. Compare dark/light, keyboard, DPI, and platform behavior.
@@ -197,8 +197,9 @@ dotnet restore RhinoFoundry.UI.sln --locked-mode
 dotnet build RhinoFoundry.UI.sln --no-restore -c Release
 dotnet test tests/RhinoFoundry.UI.Tests -c Release --no-build
 dotnet test tests/RhinoFoundry.UI.Primitives.Tests -c Release --no-build
-dotnet pack src/RhinoFoundry.UI.Primitives -c Release --no-build
-dotnet pack src/RhinoFoundry.UI -c Release --no-build
+dotnet pack src/RhinoFoundry.UI.Primitives -c Release --no-build -o artifacts/packages
+dotnet pack src/RhinoFoundry.UI -c Release --no-build -o artifacts/packages
+dotnet pack src/RhinoFoundry.UI.MacOS -c Release --no-build -o artifacts/packages
 python3 scripts/validate-packages.py
 
 git diff --check

@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory=$true)][string]$Directory,
   [Parameter(Mandatory=$true)][ValidateSet("MacOS", "Windows")][string]$Platform,
-  [string]$Manifest = (Join-Path $PSScriptRoot "../packages/foundry-ui-manifest.json")
+  [Parameter(Mandatory=$true)][string]$Manifest
 )
 $ErrorActionPreference = "Stop"
 $data = Get-Content $Manifest -Raw | ConvertFrom-Json

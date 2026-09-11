@@ -7,7 +7,7 @@ from pathlib import Path
 parser = argparse.ArgumentParser()
 parser.add_argument('directory', type=Path)
 parser.add_argument('platform', choices=['MacOS', 'Windows'])
-parser.add_argument('--manifest', type=Path, default=Path(__file__).resolve().parents[1] / 'packages/foundry-ui-manifest.json')
+parser.add_argument('--manifest', type=Path, required=True, help='Manifest supplied with the exact package bundle')
 args = parser.parse_args()
 manifest = json.loads(args.manifest.read_text())
 for name, expected in manifest['files'].items():

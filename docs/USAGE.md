@@ -122,7 +122,7 @@ Use only the packages needed by each project:
 | Eto presentation project | `RhinoFoundry.UI` | Shared controls, themes, tables, scroll behavior, and canvas input |
 | Mac composition project | `RhinoFoundry.UI.MacOS` | AppKit trackpad, clipboard, and native table adapters |
 
-Pin all Foundry packages to the same exact version. Do not use floating versions for coordinated prereleases.
+Pin all Foundry packages to the same exact version. Do not use floating versions for coordinated package updates.
 
 ```xml
 <!-- Directory.Packages.props -->
@@ -131,14 +131,14 @@ Pin all Foundry packages to the same exact version. Do not use floating versions
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="RhinoFoundry.UI" Version="0.3.0-preview.4" />
-    <PackageVersion Include="RhinoFoundry.UI.Primitives" Version="0.3.0-preview.4" />
-    <PackageVersion Include="RhinoFoundry.UI.MacOS" Version="0.3.0-preview.4" />
+    <PackageVersion Include="RhinoFoundry.UI" Version="0.3.0-preview.40" />
+    <PackageVersion Include="RhinoFoundry.UI.Primitives" Version="0.3.0-preview.40" />
+    <PackageVersion Include="RhinoFoundry.UI.MacOS" Version="0.3.0-preview.40" />
   </ItemGroup>
 </Project>
 ```
 
-For the current prerelease, put the three `.nupkg` files in a committed `packages/` directory and add it as a NuGet source:
+The version above is a development example; use the exact version of your downloaded bundle. Obtain all three `.nupkg` files and their `foundry-ui-manifest.json` from release assets or a package feed. For local consumption, put them in `packages/`, add `/packages/` to the consumer’s `.gitignore`, and configure that directory as a NuGet source. Provision these files before locked restore in CI; do not commit package binaries or the generated manifest:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -152,7 +152,7 @@ For the current prerelease, put the three `.nupkg` files in a committed `package
 </configuration>
 ```
 
-Enable lock files and restore with `--locked-mode` in CI and release builds. Commit the resulting lock files.
+Enable lock files and restore with `--locked-mode` in CI and release builds. Commit the resulting lock files. Verify packaged consumer DLLs with `python3 scripts/verify-shared-ui.py <bundle-directory> MacOS --manifest packages/foundry-ui-manifest.json` (use `Windows` for Windows bundles). The PowerShell equivalent requires `-Manifest packages/foundry-ui-manifest.json`.
 
 ## 2. Keep platform references explicit
 

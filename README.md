@@ -141,7 +141,7 @@ This repository owns presentation and input behavior. Consumers own branding, va
 | RhinoFoundry.UI | Theme, controls, accordion, resizable panes, gallery, tables, scroll container and canvas | Rhino-provided Eto / RhinoCommon |
 | RhinoFoundry.UI.MacOS | AppKit trackpad, scoped clipboard and native table adapters | Installed Rhino Mac assemblies |
 
-Pin all packages to the same exact version. Consumers vendor the prerelease `.nupkg` files in `packages/`, use that local NuGet source and commit `packages.lock.json`. Bundle the UI and Primitives DLLs beside every consumer RHP; include MacOS only in Mac bundles. This library is not installed as a separate Rhino plugin. Update all co-installed consumers together: Rhino can share assembly loads between plugins, so different DLLs with the same assembly version are unsafe.
+Pin all packages to the same exact version. Consumers obtain coordinated packages from release assets or a package feed. For a local feed, download them into an ignored `packages/` directory. Commit `packages.lock.json`, but keep package binaries out of Git. Bundle the UI and Primitives DLLs beside every consumer RHP; include MacOS only in Mac bundles. This library is not installed as a separate Rhino plugin. Update all co-installed consumers together: Rhino can share assembly loads between plugins, so different DLLs with the same assembly version are unsafe.
 
 Initialize `RhinoFoundry.UI.MacOS.FoundryMacOS.Initialize()` from each Mac consumer's composition boundary before controls load. Windows uses Eto input and native Windows controls; it must not reference or ship the Mac adapter. Never compile the Mac project using fallback stubs.
 
@@ -174,7 +174,7 @@ On a provisioned Mac, restore/build the solution and pack all three `src` projec
 
 `tools/RhinoFoundry.UI.HostChecks` builds a document-free contract runner and visual gallery. Run its `ComponentChecks.Run()` and `ShowGallery()` inside Rhino's UI thread using the example in `samples/run-host-checks.py`. The ordinary xUnit tests do not initialize Eto or certify native behavior.
 
-Packages remain local until explicit publication. Use `scripts/validate-packages.py` to verify payloads and generate a bundle hash manifest before syncing consumers. Rebuilds during development are staging candidates; once a version is distributed, publish changes under a new version.
+Write package builds to ignored `artifacts/packages/` with `dotnet pack -c Release -o artifacts/packages`. Run `python3 scripts/validate-packages.py` to validate all three packages using the version in `Directory.Build.props` and generate `artifacts/packages/foundry-ui-manifest.json`. For another bundle, supply its directory and `--version` explicitly. Distribute the manifest alongside the packages through release assets or a package feed; packages remain local until explicit publication. Pass the downloaded manifest explicitly to the verification scripts with `--manifest` (Python) or `-Manifest` (PowerShell). Use `scripts/sync-consumers.py artifacts/packages <consumer-parent-directory>` for local consumer testing; consumers should ignore their `packages/` directory. Rebuilds during development are staging candidates; once a version is distributed, publish changes under a new version.
 
 ## Documentation
 

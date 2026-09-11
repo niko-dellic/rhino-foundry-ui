@@ -7,8 +7,8 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 parser = argparse.ArgumentParser()
-parser.add_argument('directory', type=Path)
-parser.add_argument('--version', default='0.3.0-preview.4')
+parser.add_argument('directory', type=Path, nargs='?', default=Path(__file__).resolve().parents[1] / 'artifacts/packages')
+parser.add_argument('--version', default=ET.parse(Path(__file__).resolve().parents[1] / 'Directory.Build.props').findtext('.//Version'))
 args = parser.parse_args()
 manifest = {'version': args.version, 'assemblyVersion': '0.3.0.0', 'files': {}, 'packages': {}}
 for name in ['RhinoFoundry.UI.Primitives', 'RhinoFoundry.UI', 'RhinoFoundry.UI.MacOS']:

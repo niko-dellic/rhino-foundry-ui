@@ -8,3 +8,12 @@ artifacts/
 TestResults/
 *.user
 *.suo
+
+# Generated distribution packages and bundle manifests
+*.nupkg
+*.snupkg
+/packages/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
