@@ -8,6 +8,8 @@ public interface IFoundryNativeServices
         Action<double, double> pan, Action<double, PointF> zoom);
     IDisposable? AttachClipboardShortcuts(Control scope, Func<bool> canHandle, Action copy, Action paste);
     void ConfigureAlternatingRows(Grid tree);
+    /// <summary>Opt in to a caller-owned selection color; preserves native selection/input behavior.</summary>
+    void ConfigureSelectionColor(TreeGridView tree, Func<Color> color) { }
     void SelectRows(TreeGridView tree, IReadOnlyList<int> rows);
     /// <summary>Show a caller-owned action menu without text-context augmentation. False requests the portable fallback.</summary>
     bool ShowActionMenu(ContextMenu menu, Control anchor) => false;

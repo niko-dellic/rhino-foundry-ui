@@ -1,4 +1,6 @@
 using AppKit;
+using Eto.Mac.Forms.Controls;
+using CoreGraphics;
 using Foundation;
 using Eto.Forms;
 using Eto.Drawing;
@@ -29,6 +31,18 @@ public static class FoundryMacOS
             new ClipboardShortcuts(scope, canHandle, copy, paste);
         public void ConfigureAlternatingRows(Grid tree)
         { if (FindTable(MacOSHelpers.ToNative(tree, false)) is { } view) view.UsesAlternatingRowBackgroundColors = true; }
+        public void ConfigureSelectionColor(TreeGridView tree, Func<Color> color)
+        {
+            if (Find(MacOSHelpers.ToNative(tree, false)) is not { } view) return;
+            if (view.Delegate is SelectionOutlineDelegate current) { current.Color = color; return; }
+            if (view.Delegate is not TreeGridViewHandler.EtoOutlineDelegate original) return;
+            var selection = new SelectionOutlineDelegate { Handler = original.Handler, Color = color };
+            // Eto's delegate retains all editing, hierarchy, drag and selection behavior.
+            // Keep our specialization alive for the same lifetime as the widget.
+            tree.Properties["Foundry.SelectionDelegate"] = selection;
+            view.Delegate = selection;
+            view.ReloadData();
+        }
         public void SelectRows(TreeGridView tree, IReadOnlyList<int> rows)
         {
             if (Find(MacOSHelpers.ToNative(tree, false)) is not { } view) return;
@@ -51,6 +65,29 @@ public static class FoundryMacOS
             return null;
         }
     }
+    private sealed class SelectionOutlineDelegate : TreeGridViewHandler.EtoOutlineDelegate
+    {
+        internal Func<Color> Color { get; set; } = null!;
+        public override NSTableRowView RowViewForItem(NSOutlineView outlineView, NSObject item) =>
+            new SelectionRowView(() => Color());
+    }
+
+    private sealed class SelectionRowView(Func<Color> color) : NSTableRowView
+    {
+        public override NSBackgroundStyle InteriorBackgroundStyle =>
+            !Selected ? base.InteriorBackgroundStyle :
+            FoundryTable.SelectionForeground(color()) == Colors.White ? NSBackgroundStyle.Emphasized : NSBackgroundStyle.Normal;
+
+        public override void DrawSelection(CGRect dirtyRect)
+        {
+            var value = color();
+            using var fill = NSColor.FromRgba(value.R, value.G, value.B, 1f);
+            fill.SetFill();
+            using var path = NSBezierPath.FromRoundedRect(new CGRect(0, 1, Bounds.Width, Math.Max(0, Bounds.Height - 2)), 4, 4);
+            path.Fill();
+        }
+    }
+
     private sealed class ClipboardShortcuts : IDisposable
     {
         private readonly Control _scope;

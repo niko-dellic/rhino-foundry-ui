@@ -619,3 +619,12 @@ var composer = new FoundryChatComposer(editor, send, stop, attachmentButton);
 ```
 
 Place the table in the conversation's scroll container. Do not wrap it in another scrolling surface. All values have full-text tooltips; optional row actions expose keyboard-accessible Open buttons.
+
+### Custom tree selection color
+
+```csharp
+FoundryTable.ConfigureSelectionColor(tree, () => selectionColor);
+tree.CellFormatting += (_, e) => FoundryTable.FormatCell(e, tree.SelectedItems.Contains(e.Item), selectionColor);
+// After changing selectionColor, call tree.ReloadData().
+```
+The caller owns the color; no Rhino or OS preference is modified. The native adapter retains Eto editing/selection behavior and paints the selected row using that color.

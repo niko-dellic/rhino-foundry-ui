@@ -185,3 +185,5 @@ Packages remain local until explicit publication. Use `scripts/validate-packages
 - [0.3 migration](docs/MIGRATION_0.3.md) — coordinated consumer changes.
 - [Conversation surfaces](docs/CONVERSATION_SURFACES.md) — conversation presentation guidance.
 - [Changelog](CHANGELOG.md) — release history and public API changes.
+
+Preview.40 adds opt-in per-table selection colors and contrast-aware selected text. Existing callers retain native system selection colors.
