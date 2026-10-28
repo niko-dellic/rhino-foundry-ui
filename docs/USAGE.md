@@ -131,9 +131,9 @@ Pin all Foundry packages to the same exact version. Do not use floating versions
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="RhinoFoundry.UI" Version="0.3.0-preview.40" />
-    <PackageVersion Include="RhinoFoundry.UI.Primitives" Version="0.3.0-preview.40" />
-    <PackageVersion Include="RhinoFoundry.UI.MacOS" Version="0.3.0-preview.40" />
+    <PackageVersion Include="RhinoFoundry.UI" Version="0.3.0-preview.42" />
+    <PackageVersion Include="RhinoFoundry.UI.Primitives" Version="0.3.0-preview.42" />
+    <PackageVersion Include="RhinoFoundry.UI.MacOS" Version="0.3.0-preview.42" />
   </ItemGroup>
 </Project>
 ```
@@ -628,3 +628,61 @@ tree.CellFormatting += (_, e) => FoundryTable.FormatCell(e, tree.SelectedItems.C
 // After changing selectionColor, call tree.ReloadData().
 ```
 The caller owns the color; no Rhino or OS preference is modified. The native adapter retains Eto editing/selection behavior and paints the selected row using that color.
+
+## Theme-aware toolbars and shared dialogs (preview.42)
+
+```csharp
+var add = new FoundryToolbarIconButton(FoundryViewIcons.Add, "Add item");
+var separator = new FoundryToolbarSeparator(); // 32px slot, 20px rule
+var search = new FoundrySearchField("Search", "Search items", 240);
+search.TextChanged += (_, _) => ApplyFilter(search.Text);
+var icon = FoundryHierarchyIcons.Folder; // borrowed; do not dispose
+var help = new FoundryHelpDialog("Help", "First paragraph", "Second paragraph");
+var confirmation = new FoundryConfirmationOverlay();
+confirmation.ShowConfirmation("Remove item?", "Your operation description", "Your consequence", "Remove");
+confirmation.ConfirmRequested += (_, _) => BeginOperation();
+confirmation.CancelRequested += (_, _) => confirmation.Dismiss();
+// A product container can retain and dispose this binding with itself:
+var themeBinding = new FoundryThemeBinding(container, RefreshProductPresentation);
+```
+
+Factories return fresh images owned by the button; call `RefreshImage()` when a state-dependent glyph changes. Assigning `Image` disables factory mode and borrows the replacement. Dispose owned controls/bindings with their container. Do not wrap separators in another 32px slot. Keep operation rules, selection IDs and product wording in the consumer.
+
+## Responsive forms (preview.43)
+
+```csharp
+var row = new FoundryResponsiveRow(
+    new(enableButton, 92, false),
+    new(speedField, 150),
+    new(boostField, 150));
+var page = new FoundryResponsivePage(row, noticeCheckBox, otherSection);
+// Register a panel with Padding = 0. Put spacing on this inner layout.
+var inner = new TableLayout { Padding = 12, Rows = { new TableRow(page) } };
+Content = inner;
+var binding = new FoundryThemeBinding(this, () =>
+{
+    inner.BackgroundColor = FoundryTheme.PanelBackground;
+    page.ApplyTheme();
+    // Refresh consumer labels and icons, including hidden tabs.
+});
+// Dispose binding when its owner is disposed.
+```
+
+Pages own the layout containers; callers must not reuse child controls in another parent. `Activate()` requests a fresh fit after tab selection; `RefreshContent()` resynchronizes visible sections. Rows inside a page are fitted automatically. Standalone rows require `FitWidth(availableWidth)` on resize. Widths and the configurable `ScrollbarReserve` are logical pixels.
+
+Rhino 9 can recolor the registered panel's native background after construction. Keep its padding zero and apply the chosen semantic background to the inner padded container. Verify this in a **docked panel**, not just a standalone dialog. Native host chrome stays host-owned.
+
+Dock-tab icons are consumer-owned: observe effective Rhino appearance and call `Panels.ChangePanelIcon` on the UI thread. Keep icon resources alive while the host can reference them and clean up observers on shutdown. A control-bound `FoundryThemeBinding` pauses when unloaded, so it must not be the sole observer for a dock icon that remains visible while its panel is closed.
+
+## Noninteractive shortcut hints (preview.43)
+
+```csharp
+// Supply adapters for your rendering surface. Box/text positions are centers;
+// apply DPI and opacity once in those adapters. No Rhino document is owned here.
+FoundryShortcutDrawing.Keycap("Esc", 164, 52, 32, DrawBox, DrawText);
+FoundryShortcutDrawing.Mouse(119, 50, DrawBox, DrawLine);
+var opacity = FoundryNoticeTiming.Opacity(elapsedSeconds);
+var slide = FoundryNoticeTiming.SlideOffset(elapsedSeconds);
+```
+
+Import `RhinoFoundry.UI.Primitives` for timing. Drawing callbacks use Eto colors from semantic theme tokens. Glyphs have no input/focus behavior; the consumer supplies accessible equivalent instructions and owns key mappings, viewport selection, redraw, timers and cancellation.

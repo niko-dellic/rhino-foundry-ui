@@ -10,6 +10,8 @@ public sealed class FoundrySearchField : Panel
 {
     private readonly TextBox _textBox;
     private readonly FoundryToolbarField _field;
+    private readonly ImageView _icon;
+    private readonly FoundryThemeBinding _themeBinding;
 
     public FoundrySearchField(
         string placeholder = "Search",
@@ -23,6 +25,7 @@ public sealed class FoundrySearchField : Panel
             ShowBorder = false,
             BackgroundColor = Colors.Transparent,
         };
+        _icon = new ImageView { Image = FoundryViewIcons.Search(), Size = new Size(18, 18) };
         var input = new StackLayout
         {
             Orientation = Orientation.Horizontal,
@@ -30,11 +33,7 @@ public sealed class FoundrySearchField : Panel
             VerticalContentAlignment = VerticalAlignment.Center,
             Items =
             {
-                new ImageView
-                {
-                    Image = FoundryViewIcons.Search(),
-                    Size = new Size(18, 18),
-                },
+                _icon,
                 new StackLayoutItem(_textBox, true),
             },
         };
@@ -42,6 +41,23 @@ public sealed class FoundrySearchField : Panel
         Content = _field;
         Width = width;
         Height = 32;
+        _themeBinding = new FoundryThemeBinding(this, () =>
+        {
+            var previous = _icon.Image;
+            _icon.Image = FoundryViewIcons.Search();
+            previous?.Dispose();
+        });
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (IsDisposed) return;
+        if (disposing && !IsDisposed)
+        {
+            _themeBinding.Dispose();
+            _icon.Image?.Dispose();
+        }
+        base.Dispose(disposing);
     }
 
     public event EventHandler<EventArgs>? TextChanged

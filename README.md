@@ -187,3 +187,13 @@ Write package builds to ignored `artifacts/packages/` with `dotnet pack -c Relea
 - [Changelog](CHANGELOG.md) — release history and public API changes.
 
 Preview.40 adds opt-in per-table selection colors and contrast-aware selected text. Existing callers retain native system selection colors.
+
+### Preview.42 shared presentation migration
+
+`FoundryToolbarIconButton(Func<Image>, ...)` owns theme-aware icon regeneration; the existing Image overload remains caller-owned. `FoundryThemeBinding` supplies unload-safe theme callbacks using one weakly subscribed timer. `FoundryToolbarSeparator` now occupies a 32px slot around its centered 20px rule (an intentional prerelease geometry change). Search icons refresh automatically. `FoundryHierarchyIcons`, `FoundryHelpDialog` and `FoundryConfirmationOverlay` are product-neutral shared components.
+
+### Responsive layouts and shortcut hints (preview.43)
+
+`FoundryResponsiveRow` wraps controls at their specified minimum widths, stretches flexible fields and bottom-aligns controls. `FoundryResponsivePage` measures width-constrained sections after native layout settles. `FoundryShortcutDrawing` provides noninteractive keycaps and mouse glyphs through caller-owned drawing callbacks. `FoundryNoticeTiming` supplies fade/slide timing in Primitives. See USAGE.md for integration; native Rhino 8/9 Windows/macOS acceptance remains required.
+
+For reproducible net8.0 Mac adapter builds when the installed Rhino uses newer .NET assemblies, run `python3 scripts/prepare-mac-references.py` first. This extracts two checksum-pinned references from an official Rhino 8 installer without installing it. Then build/pack normally.

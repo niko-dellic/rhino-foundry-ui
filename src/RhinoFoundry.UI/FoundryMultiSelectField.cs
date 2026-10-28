@@ -43,7 +43,7 @@ public sealed class FoundryMultiSelectField : Panel
         }
         _search.LostFocus += (_, _) => CloseAfterFocusLeaves();
         _results.LostFocus += (_, _) => CloseAfterFocusLeaves();
-        _toggle = new FoundryToolbarIconButton(FoundryViewIcons.ChevronDown(), "Show drawing types");
+        _toggle = new FoundryToolbarIconButton(FoundryViewIcons.ChevronDown, "Show drawing types");
         _toggle.Size = new Size(32, 32);
         _search.TextChanged += (_, _) =>
         {

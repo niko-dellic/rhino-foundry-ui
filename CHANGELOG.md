@@ -141,3 +141,18 @@
 
 - Reduced activity row vertical padding and timeline gaps.
 - Added muted accordion activity styling for answer histories and similar disclosures.
+
+## 0.3.0-preview.42 (local, unpublished)
+
+- Centralize theme-aware icon factories and unload-safe theme observation.
+- Center toolbar separators and refresh their colors; update embedded search and multi-select icons.
+- Share generic hierarchy glyphs, contextual help dialogs and destructive confirmation presentation.
+- Preserve the borrowed-image constructor and consumer-owned operation behavior.
+
+- Native checks also fixed idempotent disposal and editable-title ownership of an Eto-cached font. Preview.41 was an intermediate local validation package; preview.42 is the final migration candidate.
+
+## 0.3.0-preview.43 (local candidate)
+
+- Extract responsive form rows/pages from Navigation and Maps, including deferred native layout and unload guards.
+- Share keycap/mouse drawing and pure notice timing; viewport lifecycle remains consumer-owned.
+- Document Rhino 9 dock padding and live appearance integration. Includes existing preview.42 theme work.

@@ -87,3 +87,25 @@ Windows and light-theme checks remain pending.
 - Added document-free title commit/cancel, blank input, silent assignment, disabled and disposal HostChecks, plus gallery examples.
 - Candidate is not yet installed or native-verified. Rhino was in a user conversation-export dialog; installation/restart was deferred to avoid interrupting it.
 - Native macOS dark/light, Retina/input and Windows sign-off remain pending. No claim of native parity from the managed build alone.
+
+## Preview.42 migration
+
+HostChecks cover factory regeneration/borrowed ownership, keyboard and disabled actions, separator geometry, search width/events and confirmation busy/cancel behavior. Native dark/light, Retina, unload/reload and Windows visual parity must be recorded separately; compilation is not native sign-off. No public package publication is authorized by the consumer migration.
+
+Preview.42 evidence: shared Release build has zero warnings/errors; 23 portable tests pass. All 13 Rhino macOS HostChecks passed against the final implementation before the version-only bump. Consumer macOS/Windows Release builds and exact package hashes pass. Final visual dark/light/Retina gallery, coordinated installed-consumer checks and Windows native parity remain pending; the active user document was left untouched. See Layout `docs/SHARED_UI_MIGRATION.md`.
+
+## Preview.43 acceptance checklist
+
+- Docked panels in Rhino 8 and 9: light/dark transitions with panels open, hidden and reopened; icons and all container backgrounds refresh.
+- Widths 700/430/330 logical pixels: minimum-width wrapping, no lost fields, correct tab order, no horizontal growth or recursive native layout.
+- Repeated tab switches and unload/dispose during queued fits.
+- Shortcut glyphs on light/dark viewports at 1x/2x DPI, slide/fade, no focus capture.
+- Run these on macOS and Windows; portable tests and cross-compilation are not native acceptance.
+
+Preview.43 automated evidence: portable UI Release build succeeded with zero warnings/errors. Portable test suites passed (23 Primitives including eight timing cases; eight UI tests) on both .NET 8 and the installed .NET 10 runtime. Native host checks were added for responsive wrapping and drawing adapters but have not been run. The Mac adapter cannot currently be rebuilt for net8.0 against the installed Rhino 8 AppKit assemblies: Microsoft.macOS requires System.Runtime 10 and Eto.macOS requires 9. A genuine net8-compatible Rhino reference set is required; no stubs, relabeled binaries or public publication were used. Consumer migration remains deferred until all three coordinated packages validate.
+
+## Preview.43 Mac reference resolution
+
+Resolved with genuine signed Eto.macOS and Microsoft.macOS assemblies extracted from the official Rhino 8.15 installer. `python3 scripts/prepare-mac-references.py` stages and SHA-256 verifies the two compile-only references. The Mac project prefers this staged directory; explicit RhinoMacResources still overrides it. Runtime assemblies remain Rhino-owned and are not bundled. All three preview.43 packages now validate. No adapter behavior was rewritten. Native runtime acceptance remains separate.
+
+Consumer migration completed on 2026-10-28: Maps and Navigation now use preview.43 shared layout/theme components; Navigation uses shortcut rendering/timing. Both platform configurations compile with zero warnings and isolated outputs pass exact DLL hash checks. Navigation: 100 tests pass. Maps: 599 pass, 15 native/data-dependent skips. Windows is cross-compilation only. Native installed-consumer acceptance remains pending.

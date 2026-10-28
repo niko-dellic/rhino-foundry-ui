@@ -128,7 +128,7 @@
         "dependencies": {
           "Markdig": "[0.37.0, )",
           "RhinoCommon": "[8.34.26223.11001, )",
-          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.15, )"
+          "RhinoFoundry.UI.Primitives": "[0.3.0-preview.41, )"
         }
       },
       "rhinofoundry.ui.primitives": {

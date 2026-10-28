@@ -1,0 +1,7 @@
+{
+  "source": "https://files.mcneel.com/rhino/8/mac/releases/rhino_8.15.25013.13002.dmg",
+  "sha256": {
+    "Eto.macOS.dll": "1e3e862a4a2e09c2b8ccf827cd030de4b476782ce8d8cdef5c5f6098c6b1cfb8",
+    "Microsoft.macOS.dll": "6b2485183cc689de504f5194955e470135a1994116ee83caa5b617528fd8617d"
+  }
+}

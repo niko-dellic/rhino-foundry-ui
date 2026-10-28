@@ -21,6 +21,89 @@ public static class ComponentChecks
             try { action(); results.Add(new { name, passed = true }); }
             catch (Exception error) { results.Add(new { name, passed = false, error = error.ToString() }); }
         }
+        Check("Responsive row wraps only below minimum widths", () =>
+        {
+            using var row = new FoundryResponsiveRow(
+                new(new Button { Text = "Enable" }, 92, false),
+                new(new TextBox(), 150), new(new TextBox(), 150));
+            row.FitWidth(430);
+            var wideHeight = row.Height;
+            row.FitWidth(330);
+            Require(row.Height > wideHeight, "Fields must wrap below the combined minimum width.");
+            row.FitWidth(700);
+            Require(row.Height == wideHeight, "Widening must restore a single row.");
+            Require(row.Controls.All(control => control.Width > 0 && control.Width <= 700), "Invalid field allocation.");
+        });
+        Check("Shortcut drawing uses supplied surface without taking focus", () =>
+        {
+            var boxes = 0; var lines = 0; var labels = new List<string>();
+            void Box(float x, float y, float w, float h, float radius, Color stroke, Color fill) => boxes++;
+            void Line(float x1, float y1, float x2, float y2, Color color) => lines++;
+            void Text(string text, float x, float y, int size, Color color) => labels.Add(text);
+            FoundryShortcutDrawing.Keycap("Esc", 0, 0, 32, Box, Text);
+            FoundryShortcutDrawing.Mouse(50, 50, Box, Line);
+            Require(boxes == 3 && lines == 2 && labels.SequenceEqual(new[] { "Esc" }), "Incomplete shortcut glyphs.");
+        });
+        Check("Factory icon regeneration, keyboard and borrowed-image ownership", () =>
+        {
+            var calls = 0;
+            using var button = new FoundryToolbarIconButton(() => { calls++; return FoundryViewIcons.Add(); }, "Add");
+            Require(calls == 1, "Factory must run at construction.");
+            var first = button.Image;
+            button.RefreshImage();
+            Require(calls == 2 && !ReferenceEquals(first, button.Image), "Explicit refresh must regenerate.");
+            var clicks = 0; button.Click += (_, _) => clicks++;
+            Key(button, Keys.Enter); Key(button, Keys.Space);
+            Require(clicks == 2, "Keyboard actions must invoke once each.");
+            button.Enabled = false; Key(button, Keys.Enter);
+            Require(clicks == 2, "Disabled button invoked.");
+            using var borrowed = FoundryViewIcons.Folder();
+            button.Image = borrowed;
+            button.RefreshImage();
+            Require(calls == 2 && ReferenceEquals(button.Image, borrowed), "Assigning Image must end factory ownership.");
+            button.Dispose();
+            Require(borrowed.Width > 0, "Button disposed a borrowed image.");
+        });
+        Check("Theme binding load, unload, reload and disposal", () =>
+        {
+            using var owner = new Panel();
+            var refreshes = 0;
+            using var binding = new FoundryThemeBinding(owner, () => refreshes++);
+            var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            var load = typeof(Control).GetMethod("OnLoadComplete", flags)!;
+            var unload = typeof(Control).GetMethod("OnUnLoad", flags)!;
+            load.Invoke(owner, [EventArgs.Empty]);
+            Require(refreshes == 1, "Initial load must refresh.");
+            unload.Invoke(owner, [EventArgs.Empty]);
+            load.Invoke(owner, [EventArgs.Empty]);
+            Require(refreshes == 2, "Reload must refresh without duplicate registration.");
+            binding.Dispose();
+            unload.Invoke(owner, [EventArgs.Empty]); load.Invoke(owner, [EventArgs.Empty]);
+            Require(refreshes == 2, "Disposed binding retained callbacks.");
+        });
+        Check("Separator geometry and shared search contract", () =>
+        {
+            using var separator = new FoundryToolbarSeparator();
+            Require(separator.Width == 1 && separator.Height == 32, "Separator must occupy the toolbar slot.");
+            Require(separator.Padding.Top == 6 && separator.Padding.Bottom == 6 && separator.Content!.Height == 20,
+                "Rule must have symmetric insets.");
+            using var search = new FoundrySearchField("Find", "Find items", 240);
+            var changes = 0; search.TextChanged += (_, _) => changes++;
+            search.Text = "needle";
+            Require(search.Input.Text == "needle" && changes == 1, "Search text/event parity changed.");
+            search.FieldWidth = 320;
+            Require(search.Width == 320 && search.Content!.Width == 320, "Search shell width did not follow field width.");
+        });
+        Check("Confirmation cancellation and busy state", () =>
+        {
+            using var overlay = new FoundryConfirmationOverlay();
+            var cancelled = 0; overlay.CancelRequested += (_, _) => cancelled++;
+            overlay.ShowConfirmation("Remove?", "Example only", "Cannot undo", "Remove");
+            Key(overlay, Keys.Escape); Require(cancelled == 1, "Escape must request cancellation.");
+            overlay.ShowBusy("Removing…", "Please wait");
+            Key(overlay, Keys.Escape); Require(cancelled == 1, "Busy state accepted cancellation.");
+            overlay.Dismiss(); Require(!overlay.Visible, "Dismiss did not hide overlay.");
+        });
         Check("Editable title commit, cancel, assignment and disabled behavior", () =>
         {
             using var title = new FoundryEditableTitle("Untitled chat");
@@ -146,6 +229,9 @@ public static class ComponentChecks
                 new FoundryEditableTitle("A long title that should be truncated without losing its full editable value"),
                 new FoundryEditableTitle("Disabled title") { Enabled = false } } }),
             new("Actions and fields", new StackLayout { Spacing = 8, Items = {
+                new StackLayout { Orientation = Orientation.Horizontal, VerticalContentAlignment = VerticalAlignment.Center, Spacing = 4,
+                    Items = { new FoundryToolbarIconButton(FoundryViewIcons.Add, "Theme-aware add"), new FoundryToolbarSeparator(),
+                        new FoundryToolbarIconButton(FoundryViewIcons.Delete, "Disabled") { Enabled = false }, new FoundrySearchField(width: 240) } },
                 button, new FoundryDialogButton("Disabled", FoundryDialogButtonStyle.Secondary) { Enabled = false },
                 new FoundryFormField(new TextBox { PlaceholderText = "32px field" }),
                 new FoundryCheckBox("Space toggles this"), new FoundrySlider(0, 100, 50) } }, true),

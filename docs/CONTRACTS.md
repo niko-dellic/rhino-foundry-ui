@@ -54,3 +54,9 @@ FoundryReadOnlyTable copies header/row values and requires at least one header. 
 # Activity disclosure (preview.37)
 
 The optional `isActivity` constructor flag gives an accordion muted heading text, quiet hover and no bottom rule. Expansion, keyboard, focus, child ownership and disabled behavior are unchanged. Activity timeline gaps are Space2 and card vertical padding is Space1; larger image/detail content still determines its own height.
+
+## Theme and image ownership
+
+Preview.42 adds factory-owned toolbar icons without changing ownership of the existing Image constructor/property. A factory returns a fresh, non-null image; the button releases it on replacement/disposal. `Image` assignment ends factory ownership and borrows the supplied image. `FoundryThemeBinding` is UI-thread-only, attaches at LoadComplete, suspends on UnLoad, and must be disposed by its owner. One timer observes dark mode plus native foreground/background colors; weak registrations must not retain unloaded controls. A callback must only update presentation, never mutate a Rhino document.
+
+Hierarchy icon properties return shared borrowed images retained for native cells; callers must not dispose them. Product-specific icons remain consumer-owned. Confirmation overlays only raise requests; they never execute or infer an operation. Busy state disables both actions and Escape cancellation. Search delegates text/events to its native editor and preserves 32px geometry. Separator height changes from 20 to 32 in this prerelease; the visible rule remains 20, inset by 6.

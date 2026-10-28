@@ -11,6 +11,13 @@ public sealed class PublicApiTests
         Type[] publicTypes =
         [
             typeof(FoundryTheme),
+            typeof(FoundryResponsiveRow),
+            typeof(FoundryResponsivePage),
+            typeof(FoundryShortcutDrawing),
+            typeof(FoundryThemeBinding),
+            typeof(FoundryHierarchyIcons),
+            typeof(FoundryHelpDialog),
+            typeof(FoundryConfirmationOverlay),
             typeof(FoundryDialogButton),
             typeof(FoundryToolbarIconButton),
             typeof(FoundryToolbarButtonGroup),

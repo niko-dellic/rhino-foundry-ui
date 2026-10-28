@@ -91,6 +91,44 @@ public sealed class FoundryToolbarIconButton : Drawable
         };
     }
 
+    private Func<Image>? _imageFactory;
+    private FoundryThemeBinding? _themeBinding;
+    private bool _ownsImage;
+
+    /// <summary>Creates a theme-aware button. The factory must return a fresh image; the button owns and disposes it.</summary>
+    public FoundryToolbarIconButton(Func<Image> imageFactory, string toolTip, bool isToggle = false)
+        : this((imageFactory ?? throw new ArgumentNullException(nameof(imageFactory)))(), toolTip, isToggle)
+    {
+        _imageFactory = imageFactory;
+        _ownsImage = true;
+        _themeBinding = new FoundryThemeBinding(this, RefreshImage);
+    }
+
+    /// <summary>Regenerates a factory-owned icon after a non-theme state change. Borrowed images are unchanged.</summary>
+    public void RefreshImage()
+    {
+        if (_imageFactory is null || IsDisposed) return;
+        var next = _imageFactory() ?? throw new InvalidOperationException("Icon factory returned null.");
+        var previous = _image;
+        _image = next;
+        Invalidate();
+        if (!ReferenceEquals(previous, next)) previous.Dispose();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (IsDisposed) return;
+        if (disposing && !IsDisposed)
+        {
+            _themeBinding?.Dispose();
+            _themeBinding = null;
+            if (_ownsImage) _image.Dispose();
+            _imageFactory = null;
+            _ownsImage = false;
+        }
+        base.Dispose(disposing);
+    }
+
     public event EventHandler? Click;
 
     public Image Image
@@ -98,8 +136,17 @@ public sealed class FoundryToolbarIconButton : Drawable
         get => _image;
         set
         {
-            _image = value ?? throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
+            if (ReferenceEquals(_image, value)) return;
+            var previous = _image;
+            var owned = _ownsImage;
+            _themeBinding?.Dispose();
+            _themeBinding = null;
+            _imageFactory = null;
+            _ownsImage = false;
+            _image = value;
             Invalidate();
+            if (owned) previous.Dispose();
         }
     }
 

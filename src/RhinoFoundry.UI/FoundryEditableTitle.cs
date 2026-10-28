@@ -13,7 +13,8 @@ public sealed class FoundryEditableTitle : Panel
     private readonly FoundryDialogButton _button;
     private readonly TextBox _editor = new();
     private readonly FoundryFormField _field;
-    private readonly Font _font = SystemFonts.Bold(13);
+    // This control disposes its font; never dispose Eto’s cached SystemFonts instance.
+    private readonly Font _font = new(SystemFont.Bold, 13);
     private string _value;
     private bool _editing;
     private bool _disposing;
@@ -104,6 +105,7 @@ public sealed class FoundryEditableTitle : Panel
 
     protected override void Dispose(bool disposing)
     {
+        if (IsDisposed) return;
         if (disposing && !_disposing)
         {
             _disposing = true;
