@@ -173,7 +173,7 @@ public static class FoundryTheme
 
     public static Font EmptyTitleFont => SystemFonts.Bold(13);
 
-    public static Font HierarchyTableFont => SystemFonts.Default(HierarchyTableFontSize);
+    public static Font HierarchyTableFont => OperatingSystem.IsWindows() ? FormFont : SystemFonts.Default(HierarchyTableFontSize);
 
     public static Font HierarchyTableBadgeFont => SystemFonts.Bold(HierarchyTableFontSize);
 

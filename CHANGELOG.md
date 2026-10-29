@@ -1,4 +1,6 @@
-# 0.3.0-preview.56
+# 0.3.0-preview.57
+
+- Add FormFont/FormEmphasisFont and opt-in FoundryTypography.ApplyForm for consistent Windows form typography, including disclosure headings and nested native editors.
 
 - Detect Windows dark mode from Rhino paint colors and provide a neutral dark content surface.
 - Remove nested native field borders; support Rhino 8 WPF editors and Rhino 9 composite numeric editors after lazy page creation.

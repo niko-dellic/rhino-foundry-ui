@@ -6,7 +6,7 @@ Preview.37 tightens activity timeline spacing and adds `FoundryAccordionItem(...
 
 Shared, theme-aware **Eto.Forms components for Rhino 8 / .NET 8** on Windows and macOS. Build forms, toolbars, data views and conversation surfaces from a common presentation layer.
 
-**Prerelease: `0.3.0-preview.56`.** Native Windows sign-off is still required before a stable release. See [validation status](docs/VALIDATION.md) and the [changelog](CHANGELOG.md).
+**Prerelease: `0.3.0-preview.57`.** Native Windows sign-off is still required before a stable release. See [validation status](docs/VALIDATION.md) and the [changelog](CHANGELOG.md).
 
 [Usage & examples](docs/USAGE.md) · [Component catalogue](#component-catalogue) · [Installation](#packages-and-installation) · [Contributing](docs/IMPLEMENTING_COMPONENTS.md)
 
@@ -201,3 +201,5 @@ Preview.40 adds opt-in per-table selection colors and contrast-aware selected te
 For reproducible net8.0 Mac adapter builds when the installed Rhino uses newer .NET assemblies, run `python3 scripts/prepare-mac-references.py` first. This extracts two checksum-pinned references from an official Rhino 8 installer without installing it. Then build/pack normally.
 
 Form typography: `FoundryTheme.FormFont` and `FormEmphasisFont` share the same 9-point size; emphasis changes weight. Native WPF editors receive the corresponding DIP size once, leaving monitor DPI scaling to WPF.
+
+Use FoundryTypography.ApplyForm(content) during Windows form composition to apply the body role to labels, editors, tables and disclosure headings. Custom-drawn controls retain their documented roles.

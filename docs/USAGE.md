@@ -686,3 +686,11 @@ var slide = FoundryNoticeTiming.SlideOffset(elapsedSeconds);
 ```
 
 Import `RhinoFoundry.UI.Primitives` for timing. Drawing callbacks use Eto colors from semantic theme tokens. Glyphs have no input/focus behavior; the consumer supplies accessible equivalent instructions and owns key mappings, viewport selection, redraw, timers and cancellation.
+
+For a Windows form, opt into consistent body typography during composition:
+```csharp
+FoundryTypography.ApplyForm(formContent);
+var title = new Label { Text = "Panel title", Font = FoundryTheme.FormEmphasisFont };
+```
+FormFont and FormEmphasisFont use the same point size. Weight provides emphasis;
+WPF owns monitor DPI scaling. ApplyForm leaves custom-drawn control roles intact.

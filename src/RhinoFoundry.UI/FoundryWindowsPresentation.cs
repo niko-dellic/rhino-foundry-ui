@@ -31,6 +31,17 @@ internal static class FoundryWindowsPresentation
                 yield return item;
     }
 
+    internal static void FormText(Control control)
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        Try(() =>
+        {
+            var root = control.ControlObject;
+            Set(root, "FontSize", FoundryTheme.FormFont.Size * 96d / 72d);
+            foreach (var part in Visuals(root))
+                if (Is(part, "TextBlock")) Set(part, "FontSize", FoundryTheme.FormFont.Size * 96d / 72d);
+        });
+    }
     internal static void Field(Control editor)
     {
         if (!OperatingSystem.IsWindows()) return;
