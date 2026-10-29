@@ -1,3 +1,11 @@
+# 0.3.0-preview.56
+
+- Detect Windows dark mode from Rhino paint colors and provide a neutral dark content surface.
+- Remove nested native field borders; support Rhino 8 WPF editors and Rhino 9 composite numeric editors after lazy page creation.
+- Add scoped native ComboBox and DataGrid presentation: dark dropdowns and headers, borderless cells, alternating rows, and column resize handles.
+- Normalize compact Windows tab typography and paint opaque button resting surfaces.
+- Preserve native editing and keyboard behavior; do not modify Rhino application styles.
+
 # Changelog
 
 ## 0.3.0-preview.33

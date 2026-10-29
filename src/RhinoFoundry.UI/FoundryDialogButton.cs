@@ -125,6 +125,8 @@ public sealed class FoundryDialogButton : Drawable
         var bounds = new RectangleF(0.5f, 0.5f, Math.Max(0, Width - 1), Math.Max(0, Height - 1));
         using var outline = GraphicsPath.GetRoundRect(bounds, 6);
         var destructive = _style == FoundryDialogButtonStyle.Destructive;
+        if (Enabled && _style != FoundryDialogButtonStyle.Heading)
+            graphics.FillPath(FoundryTheme.ToolbarButtonBackground, outline);
         if (Enabled && (_hovered || _pressed))
         {
             var fill = destructive

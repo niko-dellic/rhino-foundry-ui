@@ -15,11 +15,18 @@ public static class FoundryTheme
     public const int Space4 = 16;
     public const int Space6 = 24;
 
-    public static Color PanelBackground => SystemColors.ControlBackground;
+    // Eto's WPF system palette can remain light while Rhino uses dark mode.
+    // Follow the host's paint colors on Windows, including custom Rhino colors.
+    public static Color PanelBackground => OperatingSystem.IsWindows()
+        ? RhinoColor(() => AppearanceSettings.GetPaintColor(PaintColor.PanelBackground, true), SystemColors.ControlBackground)
+        : SystemColors.ControlBackground;
 
-    public static Color ContentBackground => PanelBackground;
+    public static Color ContentBackground => OperatingSystem.IsWindows() && IsDarkMode
+        ? Color.FromArgb(30, 30, 30, 255) : PanelBackground;
 
-    public static Color PrimaryText => SystemColors.ControlText;
+    public static Color PrimaryText => OperatingSystem.IsWindows()
+        ? RhinoColor(() => AppearanceSettings.GetPaintColor(PaintColor.TextEnabled, true), SystemColors.ControlText)
+        : SystemColors.ControlText;
 
     public static Color SecondaryText => IsDarkMode
         ? Color.FromArgb(161, 161, 170, 255)
@@ -33,7 +40,7 @@ public static class FoundryTheme
     {
         get
         {
-            var background = SystemColors.ControlBackground;
+            var background = PanelBackground;
             return background.Rb * 299 + background.Gb * 587 + background.Bb * 114 < 128000;
         }
     }
@@ -155,6 +162,12 @@ public static class FoundryTheme
 
     public static Color WithAlpha(Color color, int alpha) =>
         Color.FromArgb(color.Rb, color.Gb, color.Bb, Math.Clamp(alpha, 0, 255));
+
+    /// <summary>Consistent native form text in Eto points; native handlers own DPI scaling.</summary>
+    public static Font FormFont => SystemFonts.Default(9);
+
+    /// <summary>Form emphasis changes weight without changing text size.</summary>
+    public static Font FormEmphasisFont => SystemFonts.Bold(9);
 
     public static Font BrandFont => SystemFonts.Bold(9);
 

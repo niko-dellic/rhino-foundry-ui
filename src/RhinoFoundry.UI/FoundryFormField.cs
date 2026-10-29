@@ -14,6 +14,7 @@ public sealed class FoundryFormField : PixelLayout
     private const int SingleLineHeight = 32;
     private const int SingleLineEditorHeight = 24;
     private readonly Control _input;
+    private bool _nativePresentationQueued;
     private readonly Control _interactionControl;
     private readonly FieldChrome _chrome;
     private readonly int _horizontalInset;
@@ -39,9 +40,11 @@ public sealed class FoundryFormField : PixelLayout
         _centerSingleLineEditor = input is TextBox or DropDown or NumericStepper;
         _chrome = new FieldChrome(cornerRadius);
         BackgroundColor = Colors.Transparent;
-
         PrepareNativeInput(input);
+
         input.Load += (_, _) => SuppressNativeFocusRing(input);
+        _chrome.Paint += (_, _) => QueueNativePresentation();
+        UnLoad += (_, _) => _nativePresentationQueued = false;
         var requestedHeight = input.Height > 0 ? input.Height + (_verticalInset * 2) : SingleLineHeight;
         Height = fixedHeight ?? Math.Max(minimumHeight, requestedHeight);
         if (input.Width > 0) Width = input.Width;
@@ -77,6 +80,15 @@ public sealed class FoundryFormField : PixelLayout
         _chrome.Invalidate();
     }
 
+    private void QueueNativePresentation()
+    {
+        if (!OperatingSystem.IsWindows() || _nativePresentationQueued) return;
+        // WPF may replace native templates while loading a hidden page.
+        // Queue once after the first visible paint, after host styling completes.
+        _nativePresentationQueued = true;
+        Application.Instance.AsyncInvoke(() => { if (!_input.IsDisposed) FoundryWindowsPresentation.Field(_input); });
+    }
+
     private void LayoutChildren()
     {
         var size = ClientSize;
@@ -98,6 +110,7 @@ public sealed class FoundryFormField : PixelLayout
 
     private static void PrepareNativeInput(Control input)
     {
+        if (OperatingSystem.IsWindows() && input is CommonControl editor) editor.Font = FoundryTheme.FormFont;
         input.BackgroundColor = Colors.Transparent;
         switch (input)
         {

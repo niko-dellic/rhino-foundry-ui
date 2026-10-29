@@ -11,17 +11,9 @@ public static class FoundrySurfaceTheme
     public const int Space3 = 12;
     public const int Space4 = 16;
 
-    public static bool IsDarkMode
-    {
-        get
-        {
-            var background = SystemColors.ControlBackground;
-            return background.Rb * 299 + background.Gb * 587 + background.Bb * 114 < 128000;
-        }
-    }
-
-    public static Color PanelBackground => SystemColors.ControlBackground;
-    public static Color Text => SystemColors.ControlText;
+    public static bool IsDarkMode => FoundryTheme.IsDarkMode;
+    public static Color PanelBackground => FoundryTheme.PanelBackground;
+    public static Color Text => FoundryTheme.PrimaryText;
     public static Color MutedText => IsDarkMode
         ? Color.FromArgb(161, 161, 170, 255)
         : Color.FromArgb(82, 82, 91, 255);

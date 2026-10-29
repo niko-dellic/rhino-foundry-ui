@@ -12,7 +12,7 @@ public sealed class FoundryTextSegmentedControl : Drawable
     private readonly int _leadingLabelWidth;
     private readonly int _paddingSize;
     private readonly int _segmentHeight;
-    private readonly Font _font = SystemFonts.Bold(9);
+    private readonly Font _font = SystemFonts.Bold(OperatingSystem.IsWindows() ? 7.5f : 9);
     private int _selectedIndex;
     private int _hoveredIndex = -1;
     private int _pressedIndex = -1;

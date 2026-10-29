@@ -13,6 +13,7 @@ public static class FoundryTable
         grid.ShowHeader = true;
         grid.GridLines = GridLines.None;
         grid.Load += (_, _) => FoundryNative.Services?.ConfigureAlternatingRows(grid);
+        grid.LoadComplete += (_, _) => FoundryWindowsPresentation.Table(grid);
     }
 
     public static bool FormatCell(GridCellFormatEventArgs args, bool selected) => FormatCell(args, selected, null);
