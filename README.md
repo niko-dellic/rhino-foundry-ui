@@ -6,7 +6,7 @@ Preview.37 tightens activity timeline spacing and adds `FoundryAccordionItem(...
 
 Shared, theme-aware **Eto.Forms components for Rhino 8 / .NET 8** on Windows and macOS. Build forms, toolbars, data views and conversation surfaces from a common presentation layer.
 
-**Prerelease: `0.3.0-preview.57`.** Native Windows sign-off is still required before a stable release. See [validation status](docs/VALIDATION.md) and the [changelog](CHANGELOG.md).
+**Prerelease: `0.3.0-preview.58`.** Native Windows sign-off is still required before a stable release. See [validation status](docs/VALIDATION.md) and the [changelog](CHANGELOG.md).
 
 [Usage & examples](docs/USAGE.md) · [Component catalogue](#component-catalogue) · [Installation](#packages-and-installation) · [Contributing](docs/IMPLEMENTING_COMPONENTS.md)
 

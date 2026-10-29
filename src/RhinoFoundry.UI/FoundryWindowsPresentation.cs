@@ -55,6 +55,7 @@ internal static class FoundryWindowsPresentation
                 Set(root, "Template", ComboBoxTemplate());
                 root.GetType().GetMethod("ApplyTemplate")?.Invoke(root, null);
             }
+            var foreground = Parse($"<SolidColorBrush xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Color='{Brush(FoundryTheme.PrimaryText)}'/>");
             var transparent = Parse("<SolidColorBrush xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Color='Transparent'/>");
             var zero = Activator.CreateInstance(Wpf("System.Windows.Thickness")!, 0d);
             // The shell owns the border. Retain the real TextBox/ComboBox and
@@ -69,7 +70,10 @@ internal static class FoundryWindowsPresentation
                 if (Is(part, "TextBox")) Set(part, "Template", Parse("<ControlTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' TargetType='TextBox'><ScrollViewer x:Name='PART_ContentHost' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' Background='Transparent'/></ControlTemplate>"));
                 if (Is(part, "Control")) Set(part, "FocusVisualStyle", null);
                 if (Is(part, "Control") || Is(part, "TextBlock"))
+                {
                     Set(part, "FontSize", FoundryTheme.FormFont.Size * 96d / 72d);
+                    Set(part, "Foreground", foreground);
+                }
             }
         });
     }
@@ -101,7 +105,7 @@ internal static class FoundryWindowsPresentation
             var alternate = Brush(FoundryTheme.HierarchyAlternateRowBackground);
             var foreground = Brush(FoundryTheme.PrimaryText);
             var border = Brush(FoundryTheme.CanvasBorder);
-            var selection = Brush(SystemColors.Selection);
+            var selection = Brush(FoundryTheme.IsDarkMode ? FoundryTheme.CanvasSubtleSurface : FoundryTheme.ToolbarActiveBackground);
             var selectionText = Brush(SystemColors.SelectionText);
             var resources = (IDictionary)Parse($$"""
                 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -117,7 +121,8 @@ internal static class FoundryWindowsPresentation
                     <Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="{{foreground}}"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                     <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="DataGridCell">
-                      <Border Background="{TemplateBinding Background}"><ContentPresenter VerticalAlignment="Center"/></Border>
+                      <Border x:Name="CellSurface" Background="{TemplateBinding Background}"><ContentPresenter VerticalAlignment="Center"/></Border>
+                      <ControlTemplate.Triggers><Trigger Property="IsSelected" Value="True"><Setter TargetName="CellSurface" Property="Background" Value="{{selection}}"/></Trigger></ControlTemplate.Triggers>
                     </ControlTemplate></Setter.Value></Setter>
                     <Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="{{selection}}"/><Setter Property="Foreground" Value="{{selectionText}}"/></Trigger></Style.Triggers>
                   </Style>

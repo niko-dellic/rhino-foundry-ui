@@ -1,4 +1,6 @@
-# 0.3.0-preview.57
+# 0.3.0-preview.58
+
+- Preserve visible native table selection over per-cell row formatting and explicitly apply themed text colors inside plugin-owned dialogs.
 
 - Add FormFont/FormEmphasisFont and opt-in FoundryTypography.ApplyForm for consistent Windows form typography, including disclosure headings and nested native editors.
 
